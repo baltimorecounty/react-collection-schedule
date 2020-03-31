@@ -6,7 +6,7 @@ import UkAutocomplete from "accessible-autocomplete/react";
 
 const Autocomplete = ({ id, suggest, label, ...rest }) => {
   return (
-    <div className="dg_form-field" {...rest}>
+    <div className="dg_form-field">
       {label && (
         <label className="dg_label" htmlFor={id}>
           {label}
@@ -16,6 +16,7 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
         id={id}
         className="dg_form-field_input--text"
         source={suggest}
+        {...rest}
       />
     </div>
   );
