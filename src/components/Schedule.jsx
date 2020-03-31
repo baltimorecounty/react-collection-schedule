@@ -32,12 +32,12 @@ const Schedule = ({ schedule = {} }) => {
               <TableCell>
                 {collectionDays.length > 0
                   ? collectionDays.join(",")
-                  : "No collection days specified for this type"}
+                  : "No collection days specified for this type."}
               </TableCell>
               <TableCell>
                 {nextCollectionDate
                   ? new Date(nextCollectionDate).toLocaleDateString()
-                  : "n/a"}
+                  : "n / a"}
               </TableCell>
             </TableRow>
           )
