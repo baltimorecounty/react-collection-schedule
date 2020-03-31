@@ -27,7 +27,7 @@ const Schedule = ({ schedule = {} }) => {
       <TableBody>
         {collectionSchedules.map(
           ({ name, collectionDays, nextCollectionDate }, index) => (
-            <TableRow>
+            <TableRow key={name}>
               <TableCell>{name}</TableCell>
               <TableCell>
                 {collectionDays.length > 0
