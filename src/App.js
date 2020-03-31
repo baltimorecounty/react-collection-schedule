@@ -1,10 +1,22 @@
+import Autocomplete from "./components/Autocomplete";
 import React from "react";
-import { TextInput } from "@baltimorecounty/dotgov-components";
 
 function App() {
+  const suggest = (query, populateResults) => {
+    const results = ["France", "Germany", "United Kingdom"];
+    const filteredResults = results.filter(
+      result => result.indexOf(query) !== -1
+    );
+    populateResults(["400 Washington Ave"]);
+  };
+
   return (
     <div className="App">
-      <TextInput id="address-lookup" label="Find Your Collection Schedule" />
+      <Autocomplete
+        id="address-lookup"
+        label="Find Your Collection Schedule"
+        suggest={suggest}
+      />
     </div>
   );
 }
