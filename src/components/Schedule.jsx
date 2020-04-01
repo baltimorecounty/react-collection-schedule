@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 const Schedule = ({ schedule = {} }) => {
-  const { collectionSchedules } = schedule;
+  const { collectionSchedules = [] } = schedule;
   const hasAtLeastOneSchedule = collectionSchedules.some(
     schedule => schedule.nextCollectionDate
   );
