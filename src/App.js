@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
 import Schedule from "./components/Schedule";
+import { useQuery } from "react-query";
 
 const { setConfig, getValue } = Config;
 
@@ -46,12 +47,17 @@ const fetchAddresses = addressQuery =>
     res.json()
   );
 
+const fetchSchedule = (key, address) =>
+  fetch(`${getValue("apiRoot")}/${address}`).then(res => res.json());
+
 function App() {
-  const [schedule, setSchedule] = useState({});
-  const [results, setResults] = useState([]);
+  const [address, setAddress] = useState(null);
+  const { status, data, error, isFetching } = useQuery(
+    address && ["getSchedule", address],
+    fetchSchedule
+  );
   const suggest = async (query, populateResults) => {
     const addresses = await fetchAddresses(query);
-    setResults(addresses);
     const filteredResults = addresses.map(
       ({ City, StreetAddress, Zip }) => `${StreetAddress} ${City} ${Zip}`
     );
@@ -59,24 +65,25 @@ function App() {
   };
 
   const handleValueSelect = selectedValue => {
-    if (selectedValue) {
-      setSchedule(results.find(result => result.address === selectedValue));
-    }
+    setAddress(selectedValue);
   };
 
   return (
     <div className="App">
-      <Autocomplete
-        id="address-lookup"
-        label="Find Your Collection Schedule"
-        suggest={suggest}
-        onConfirm={handleValueSelect}
-        minLength={3}
-      />
-      {Object.keys(schedule).length > 0 && (
+      {!data && (
+        <Autocomplete
+          id="address-lookup"
+          label="Find Your Collection Schedule"
+          suggest={suggest}
+          onConfirm={handleValueSelect}
+          minLength={3}
+        />
+      )}
+      {address && isFetching && <p>Loading Schedule...</p>}
+      {!isFetching && data && (
         <div className="results">
-          <p>Selected Address: {schedule.address}</p>
-          <Schedule schedule={schedule} />
+          <p>Selected Address: {address}</p>
+          <Schedule selectedAddress={address} schedule={data[0]} />
         </div>
       )}
     </div>
