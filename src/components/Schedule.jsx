@@ -1,4 +1,5 @@
 import {
+  Alert,
   Table,
   TableBody,
   TableCell,
@@ -7,14 +8,25 @@ import {
   TableRow
 } from "@baltimorecounty/dotgov-components";
 
+import CommercialAlert from "./CommercialAlert";
+import InActiveRouteAlert from "./InActiveRouteAlert";
 import PropTypes from "prop-types";
 import React from "react";
 
 const Schedule = ({ schedule = {} }) => {
-  const { collectionSchedules } = schedule;
+  const { collectionSchedules, isSingleFamilyHome, isActiveRoute } = schedule;
   const hasAtLeastOneSchedule = collectionSchedules.some(
     schedule => schedule.nextCollectionDate
   );
+
+  if (!isActiveRoute) {
+    return <InActiveRouteAlert />;
+  }
+
+  if (!isSingleFamilyHome) {
+    return <CommercialAlert />;
+  }
+
   return hasAtLeastOneSchedule ? (
     <Table>
       <TableHead>
