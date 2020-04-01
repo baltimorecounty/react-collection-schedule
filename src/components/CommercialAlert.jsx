@@ -1,7 +1,7 @@
 import { Alert } from "@baltimorecounty/dotgov-components";
 import React from "react";
 
-export default (
+const CommercialAlert = () => (
   <Alert
     className="status"
     type="warning"
@@ -19,3 +19,5 @@ export default (
     </p>
   </Alert>
 );
+
+export default CommercialAlert;

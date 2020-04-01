@@ -1,7 +1,7 @@
 import { Alert } from "@baltimorecounty/dotgov-components";
 import React from "react";
 
-export default (
+const InActiveRouteAlert = () => (
   <Alert
     className="status"
     type="warning"
@@ -18,3 +18,5 @@ export default (
     </p>
   </Alert>
 );
+
+export default InActiveRouteAlert;
