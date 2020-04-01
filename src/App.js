@@ -22,23 +22,29 @@ const localApiRoot =
 
 const configValues = {
   local: {
-    apiRoot: localApiRoot
+    apiRoot: localApiRoot,
+    addressLookupEndpoint: "http://localhost:54727/api/gis/addresslookup"
   },
   development: {
-    apiRoot: testApiRoot
+    apiRoot: testApiRoot,
+    addressLookupEndpoint: ""
   },
   staging: {
-    apiRoot: testApiRoot
+    apiRoot: testApiRoot,
+    addressLookupEndpoint: ""
   },
   production: {
-    apiRoot: prodApiRoot
+    apiRoot: prodApiRoot,
+    addressLookupEndpoint: ""
   }
 };
 
 setConfig(configValues);
 
 const fetchAddresses = addressQuery =>
-  fetch(`${getValue("apiRoot")}/${addressQuery}`).then(res => res.json());
+  fetch(`${getValue("addressLookupEndpoint")}/${addressQuery}`).then(res =>
+    res.json()
+  );
 
 function App() {
   const [schedule, setSchedule] = useState({});
@@ -46,7 +52,9 @@ function App() {
   const suggest = async (query, populateResults) => {
     const addresses = await fetchAddresses(query);
     setResults(addresses);
-    const filteredResults = addresses.map(result => result.address);
+    const filteredResults = addresses.map(
+      ({ City, StreetAddress, Zip }) => `${StreetAddress} ${City} ${Zip}`
+    );
     populateResults(filteredResults);
   };
 
