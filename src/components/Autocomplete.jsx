@@ -3,8 +3,15 @@ import "accessible-autocomplete/dist/accessible-autocomplete.min.css";
 import PropTypes from "prop-types";
 import React from "react";
 import UkAutocomplete from "accessible-autocomplete/react";
+import { useDebouncedCallback } from "use-debounce";
 
 const Autocomplete = ({ id, suggest, label, ...rest }) => {
+  const [debouncedCallback] = useDebouncedCallback(suggest, 300);
+
+  const handleSource = (query, populateResults) => {
+    debouncedCallback(query, populateResults);
+  };
+
   return (
     <div className="dg_form-field">
       {label && (
@@ -15,7 +22,8 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
       <UkAutocomplete
         id={id}
         className="dg_form-field_input--text"
-        source={suggest}
+        source={handleSource}
+        showNoOptionsFound={false}
         {...rest}
       />
     </div>
