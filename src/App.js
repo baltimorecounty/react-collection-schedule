@@ -24,31 +24,31 @@ const localApiRoot =
 const configValues = {
   local: {
     apiRoot: localApiRoot,
-    addressLookupEndpoint: "http://localhost:54727/api/gis/addresslookup"
+    addressLookupEndpoint: "http://localhost:54727/api/gis/addresslookup",
   },
   development: {
     apiRoot: testApiRoot,
-    addressLookupEndpoint: ""
+    addressLookupEndpoint: "",
   },
   staging: {
     apiRoot: testApiRoot,
-    addressLookupEndpoint: ""
+    addressLookupEndpoint: "",
   },
   production: {
     apiRoot: prodApiRoot,
-    addressLookupEndpoint: ""
-  }
+    addressLookupEndpoint: "",
+  },
 };
 
 setConfig(configValues);
 
-const fetchAddresses = addressQuery =>
-  fetch(`${getValue("addressLookupEndpoint")}/${addressQuery}`).then(res =>
+const fetchAddresses = (addressQuery) =>
+  fetch(`${getValue("addressLookupEndpoint")}/${addressQuery}`).then((res) =>
     res.json()
   );
 
 const fetchSchedule = (key, address) =>
-  fetch(`${getValue("apiRoot")}/${address}`).then(res => res.json());
+  fetch(`${getValue("apiRoot")}/${address}`).then((res) => res.json());
 
 function App() {
   const [address, setAddress] = useState(null);
@@ -58,14 +58,11 @@ function App() {
   );
   const suggest = async (query, populateResults) => {
     const addresses = await fetchAddresses(query);
-    const filteredResults = addresses.map(
-      ({ City, StreetAddress, Zip }) => `${StreetAddress} ${City} ${Zip}`
-    );
-    populateResults(filteredResults);
+    populateResults(addresses);
   };
 
-  const handleValueSelect = selectedValue => {
-    setAddress(selectedValue);
+  const handleValueSelect = (selectedValue) => {
+    setAddress(selectedValue.StreetAddress);
   };
 
   return (

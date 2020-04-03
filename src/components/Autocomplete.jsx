@@ -12,6 +12,12 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
     debouncedCallback(query, populateResults);
   };
 
+  const templateFn = (address) => {
+    return address
+      ? `${address.StreetAddress} ${address.City} ${address.Zip}`
+      : "";
+  };
+
   return (
     <div className="dg_form-field">
       {label && (
@@ -24,6 +30,10 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
         className="dg_form-field_input--text"
         source={handleSource}
         showNoOptionsFound={false}
+        templates={{
+          inputValue: templateFn,
+          suggestion: templateFn,
+        }}
         {...rest}
       />
     </div>
@@ -36,7 +46,7 @@ Autocomplete.prototypes = {
   /** Label to describe the input */
   label: PropTypes.string,
   /** Suggest function populates the autocomplete values */
-  suggest: PropTypes.func.isRequired
+  suggest: PropTypes.func.isRequired,
 };
 
 export default Autocomplete;
