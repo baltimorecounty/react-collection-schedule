@@ -62,7 +62,9 @@ function App() {
   };
 
   const handleValueSelect = (selectedValue) => {
-    setAddress(selectedValue.StreetAddress);
+    if (selectedValue) {
+      setAddress(selectedValue.StreetAddress);
+    }
   };
 
   return (
