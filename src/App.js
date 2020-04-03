@@ -9,34 +9,35 @@ import { useQuery } from "react-query";
 
 const { setConfig, getValue } = Config;
 
-const testApiRoot =
-  "https://testservices.baltimorecountymd.gov/api/hub/collectionSchedule";
-const prodApiRoot =
-  "https://services.baltimorecountymd.gov/api/hub/collectionSchedule";
+const addressLookupEndpoint = "api/gis/addressLookup";
+const collectionScheduleEndpoint = "api/hub/collectionSchedule";
+
+const testApiRoot = `https://testservices.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
+const prodApiRoot = `https://services.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
 
 // HACK - the Config utility does not account for beta.
 // TODO: This will need to be addressed when we get closer to launch
-const localApiRoot =
-  window.location.hostname.indexOf("beta") > -1
-    ? testApiRoot
-    : "http://localhost:53001/api/Schedule";
+
+const isBeta = window.location.hostname.indexOf("beta") > -1;
+const localApiRoot = isBeta
+  ? testApiRoot
+  : "http://localhost:53001/api/Schedule";
+const localAddressLookup = isBeta
+  ? `https://testservices.baltimorecountymd.gov/${addressLookupEndpoint}`
+  : `http://localhost:54727/${addressLookupEndpoint}`;
 
 const configValues = {
   local: {
     apiRoot: localApiRoot,
-    addressLookupEndpoint: "http://localhost:54727/api/gis/addresslookup",
+    addressLookupEndpoint: localAddressLookup,
   },
   development: {
     apiRoot: testApiRoot,
-    addressLookupEndpoint: "",
-  },
-  staging: {
-    apiRoot: testApiRoot,
-    addressLookupEndpoint: "",
+    addressLookupEndpoint: localAddressLookup,
   },
   production: {
     apiRoot: prodApiRoot,
-    addressLookupEndpoint: "",
+    addressLookupEndpoint: `https://services.baltimorecountymd.gov/${addressLookupEndpoint}`,
   },
 };
 
@@ -52,7 +53,7 @@ const fetchSchedule = (key, address) =>
 
 function App() {
   const [address, setAddress] = useState(null);
-  const { status, data, error, isFetching } = useQuery(
+  const { data, error, isFetching } = useQuery(
     address && ["getSchedule", address],
     fetchSchedule
   );
