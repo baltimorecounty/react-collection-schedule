@@ -3,7 +3,7 @@ import { Config } from "@baltimorecounty/javascript-utilities";
 const { setConfig } = Config;
 
 const addressLookupEndpoint = "api/gis/addressLookup";
-const collectionScheduleEndpoint = "api/hub/collectionSchedule";
+const collectionScheduleEndpoint = "api/hub/collectionSchedule/schedule";
 
 const testApiRoot = `https://testservices.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
 const prodApiRoot = `https://services.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
