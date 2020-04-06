@@ -3,44 +3,14 @@ import React, { useState } from "react";
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "./common/Fetch";
+import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
 import { useQuery } from "react-query";
 
-const { setConfig, getValue } = Config;
+const { getValue } = Config;
 
-const addressLookupEndpoint = "api/gis/addressLookup";
-const collectionScheduleEndpoint = "api/hub/collectionSchedule";
-
-const testApiRoot = `https://testservices.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
-const prodApiRoot = `https://services.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
-
-// HACK - the Config utility does not account for beta.
-// TODO: This will need to be addressed when we get closer to launch
-
-const isBeta = window.location.hostname.indexOf("beta") > -1;
-const localApiRoot = isBeta
-  ? testApiRoot
-  : "http://localhost:53001/api/Schedule";
-const localAddressLookup = isBeta
-  ? `https://testservices.baltimorecountymd.gov/${addressLookupEndpoint}`
-  : `http://localhost:54727/${addressLookupEndpoint}`;
-
-const configValues = {
-  local: {
-    apiRoot: localApiRoot,
-    addressLookupEndpoint: localAddressLookup,
-  },
-  development: {
-    apiRoot: testApiRoot,
-    addressLookupEndpoint: localAddressLookup,
-  },
-  production: {
-    apiRoot: prodApiRoot,
-    addressLookupEndpoint: `https://services.baltimorecountymd.gov/${addressLookupEndpoint}`,
-  },
-};
-
-setConfig(configValues);
+// Run our Startup Code
+Run();
 
 function App() {
   const [address, setAddress] = useState(null);
