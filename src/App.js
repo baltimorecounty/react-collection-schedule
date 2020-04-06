@@ -66,6 +66,12 @@ function App() {
     }
   };
 
+  if (error) {
+    return (
+      <p>Something went wrong. Please try again in a couple of minutes.</p>
+    );
+  }
+
   return (
     <div className="App">
       {!data && (
