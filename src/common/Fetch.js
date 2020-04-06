@@ -1,7 +1,7 @@
 import "whatwg-fetch";
 
 /**
- *
+ * Wrapper for https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
  * @param {string} key unique key for the fetch request
  * @param {object} object
  * @param {object.endpoint} api endpoint
