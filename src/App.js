@@ -1,74 +1,69 @@
-import "whatwg-fetch";
-
 import React, { useState } from "react";
 
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
+import Fetch from "./common/Fetch";
+import { FormatAddress } from "./common/Formatters";
+import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
+import { useQuery } from "react-query";
 
-const { setConfig, getValue } = Config;
+const { getValue } = Config;
 
-const testApiRoot =
-  "https://testservices.baltimorecountymd.gov/api/hub/collectionSchedule";
-const prodApiRoot =
-  "https://services.baltimorecountymd.gov/api/hub/collectionSchedule";
-
-// HACK - the Config utility does not account for beta.
-// TODO: This will need to be addressed when we get closer to launch
-const localApiRoot =
-  window.location.hostname.indexOf("beta") > -1
-    ? testApiRoot
-    : "http://localhost:53001/api/Schedule";
-
-const configValues = {
-  local: {
-    apiRoot: localApiRoot
-  },
-  development: {
-    apiRoot: testApiRoot
-  },
-  staging: {
-    apiRoot: testApiRoot
-  },
-  production: {
-    apiRoot: prodApiRoot
-  }
-};
-
-setConfig(configValues);
-
-const fetchAddresses = addressQuery =>
-  fetch(`${getValue("apiRoot")}/${addressQuery}`).then(res => res.json());
+// Run our Startup Code
+Run();
 
 function App() {
-  const [schedule, setSchedule] = useState({});
-  const [results, setResults] = useState([]);
+  const [address, setAddress] = useState({});
+  const hasAddress = Object.keys(address).length > 0;
+  const { data, error, isFetching } = useQuery(
+    hasAddress && [
+      "getSchedule",
+      {
+        endpoint: getValue("apiRoot"),
+        path: address.StreetAddress,
+      },
+    ],
+    Fetch
+  );
+
   const suggest = async (query, populateResults) => {
-    const addresses = await fetchAddresses(query);
-    setResults(addresses);
-    const filteredResults = addresses.map(result => result.address);
-    populateResults(filteredResults);
+    const addresses = await Fetch("address", {
+      endpoint: getValue("addressLookupEndpoint"),
+      path: query,
+    });
+    populateResults(addresses);
   };
 
-  const handleValueSelect = selectedValue => {
-    if (selectedValue) {
-      setSchedule(results.find(result => result.address === selectedValue));
-    }
+  const handleValueSelect = (selectedValue) => {
+    setAddress(selectedValue ? selectedValue : {});
   };
+
+  if (error) {
+    return (
+      <p>Something went wrong. Please try again in a couple of minutes.</p>
+    );
+  }
 
   return (
     <div className="App">
-      <Autocomplete
-        id="address-lookup"
-        label="Find Your Collection Schedule"
-        suggest={suggest}
-        onConfirm={handleValueSelect}
-        minLength={3}
-      />
-      {Object.keys(schedule).length > 0 && (
+      {!data && (
+        <Autocomplete
+          id="address-lookup"
+          label="Find Your Collection Schedule"
+          suggest={suggest}
+          onConfirm={handleValueSelect}
+          minLength={3}
+        />
+      )}
+      {hasAddress && isFetching && <p>Loading Schedule...</p>}
+      {hasAddress && !isFetching && data && (
         <div className="results">
-          <p>Selected Address: {schedule.address}</p>
-          <Schedule schedule={schedule} />
+          <p>Selected Address: {FormatAddress(address)}</p>
+          <Schedule
+            selectedAddress={address.StreetAddress}
+            schedule={data[0]}
+          />
         </div>
       )}
     </div>
