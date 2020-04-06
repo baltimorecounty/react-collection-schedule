@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ReactQueryConfigProvider, useQuery } from "react-query";
 
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
@@ -6,9 +7,13 @@ import Fetch from "./common/Fetch";
 import { FormatAddress } from "./common/Formatters";
 import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
-import { useQuery } from "react-query";
 
 const { getValue } = Config;
+
+const queryConfig = {
+  refetchAllOnWindowFocus: false,
+  //   refetchOnMount: true,
+};
 
 // Run our Startup Code
 Run();
@@ -47,27 +52,30 @@ function App() {
 
   return (
     <div className="App">
-      {!data && (
-        <Autocomplete
-          id="address-lookup"
-          label="Find Your Collection Schedule"
-          suggest={suggest}
-          onConfirm={handleValueSelect}
-          minLength={3}
-        />
-      )}
-      {hasAddress && isFetching && <p>Loading Schedule...</p>}
-      {hasAddress && !isFetching && data && (
-        <div className="results">
-          <p className="font-weight-bold">
-            <span>Schedule for</span>: {FormatAddress(address)}
-          </p>
-          <Schedule
-            selectedAddress={address.StreetAddress}
-            schedule={data[0]}
+      <ReactQueryConfigProvider config={queryConfig}>
+        {!data && (
+          <Autocomplete
+            id="address-lookup"
+            label="Find Your Collection Schedule"
+            suggest={suggest}
+            onConfirm={handleValueSelect}
+            minLength={3}
           />
-        </div>
-      )}
+        )}
+        {hasAddress && isFetching && <p>Loading Schedule...</p>}
+        {hasAddress && !isFetching && data && (
+          <div className="results">
+            <p>
+              <span className="font-weight-bold">Schedule for</span>:{" "}
+              {FormatAddress(address)}
+            </p>
+            <Schedule
+              selectedAddress={address.StreetAddress}
+              schedule={data[0]}
+            />
+          </div>
+        )}
+      </ReactQueryConfigProvider>
     </div>
   );
 }
