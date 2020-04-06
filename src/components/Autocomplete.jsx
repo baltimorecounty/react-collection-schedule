@@ -1,6 +1,6 @@
 import "accessible-autocomplete/dist/accessible-autocomplete.min.css";
 
-import { CapitalizeFirstLetter } from "../common/Formatters";
+import { FormatAddress } from "../common/Formatters";
 import PropTypes from "prop-types";
 import React from "react";
 import UkAutocomplete from "accessible-autocomplete/react";
@@ -12,18 +12,6 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
   const handleSource = (query, populateResults) => {
     debouncedCallback(query, populateResults);
   };
-
-  /**
-   * Template used to display autocomplete results
-   * @param {object} address parts of an address
-   */
-  const templateFn = (address) =>
-    address
-      ? `${address.StreetAddress} ${address.City} ${address.Zip}`
-          .split(" ")
-          .map((item) => CapitalizeFirstLetter(item))
-          .join(" ")
-      : "";
 
   return (
     <div className="dg_form-field">
@@ -38,8 +26,8 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
         source={handleSource}
         showNoOptionsFound={false}
         templates={{
-          inputValue: templateFn,
-          suggestion: templateFn,
+          inputValue: FormatAddress,
+          suggestion: FormatAddress,
         }}
         {...rest}
       />

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "./common/Fetch";
+import { FormatAddress } from "./common/Formatters";
 import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
 import { useQuery } from "react-query";
@@ -13,11 +14,15 @@ const { getValue } = Config;
 Run();
 
 function App() {
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState({});
+  const hasAddress = Object.keys(address).length > 0;
   const { data, error, isFetching } = useQuery(
-    address && [
+    hasAddress && [
       "getSchedule",
-      { endpoint: getValue("apiRoot"), path: address },
+      {
+        endpoint: getValue("apiRoot"),
+        path: address.StreetAddress,
+      },
     ],
     Fetch
   );
@@ -31,9 +36,7 @@ function App() {
   };
 
   const handleValueSelect = (selectedValue) => {
-    if (selectedValue) {
-      setAddress(selectedValue.StreetAddress);
-    }
+    setAddress(selectedValue ? selectedValue : {});
   };
 
   if (error) {
@@ -53,11 +56,14 @@ function App() {
           minLength={3}
         />
       )}
-      {address && isFetching && <p>Loading Schedule...</p>}
-      {!isFetching && data && (
+      {hasAddress && isFetching && <p>Loading Schedule...</p>}
+      {hasAddress && !isFetching && data && (
         <div className="results">
-          <p>Selected Address: {address}</p>
-          <Schedule selectedAddress={address} schedule={data[0]} />
+          <p>Selected Address: {FormatAddress(address)}</p>
+          <Schedule
+            selectedAddress={address.StreetAddress}
+            schedule={data[0]}
+          />
         </div>
       )}
     </div>
