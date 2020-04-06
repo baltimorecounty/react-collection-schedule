@@ -1,5 +1,6 @@
 import "accessible-autocomplete/dist/accessible-autocomplete.min.css";
 
+import { CapitalizeFirstLetter } from "../common/Formatters";
 import PropTypes from "prop-types";
 import React from "react";
 import UkAutocomplete from "accessible-autocomplete/react";
@@ -12,10 +13,6 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
     debouncedCallback(query, populateResults);
   };
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   /**
    * Template used to display autocomplete results
    * @param {object} address parts of an address
@@ -24,7 +21,7 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
     return address
       ? `${address.StreetAddress} ${address.City} ${address.Zip}`
           .split(" ")
-          .map((item) => capitalizeFirstLetter(item))
+          .map((item) => CapitalizeFirstLetter(item))
           .join(" ")
       : "";
   };
