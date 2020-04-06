@@ -59,7 +59,9 @@ function App() {
       {hasAddress && isFetching && <p>Loading Schedule...</p>}
       {hasAddress && !isFetching && data && (
         <div className="results">
-          <p>Selected Address: {FormatAddress(address)}</p>
+          <p className="font-weight-bold">
+            <span>Schedule for</span>: {FormatAddress(address)}
+          </p>
           <Schedule
             selectedAddress={address.StreetAddress}
             schedule={data[0]}
