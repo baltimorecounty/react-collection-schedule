@@ -12,9 +12,20 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
     debouncedCallback(query, populateResults);
   };
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  /**
+   * Template used to display autocomplete results
+   * @param {object} address parts of an address
+   */
   const templateFn = (address) => {
     return address
       ? `${address.StreetAddress} ${address.City} ${address.Zip}`
+          .split(" ")
+          .map((item) => capitalizeFirstLetter(item))
+          .join(" ")
       : "";
   };
 
