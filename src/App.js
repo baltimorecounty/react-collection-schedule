@@ -1,9 +1,8 @@
-import "whatwg-fetch";
-
 import React, { useState } from "react";
 
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
+import Fetch from "./common/Fetch";
 import Schedule from "./components/Schedule";
 import { useQuery } from "react-query";
 
@@ -43,22 +42,21 @@ const configValues = {
 
 setConfig(configValues);
 
-const fetchAddresses = (addressQuery) =>
-  fetch(`${getValue("addressLookupEndpoint")}/${addressQuery}`).then((res) =>
-    res.json()
-  );
-
-const fetchSchedule = (key, address) =>
-  fetch(`${getValue("apiRoot")}/${address}`).then((res) => res.json());
-
 function App() {
   const [address, setAddress] = useState(null);
   const { data, error, isFetching } = useQuery(
-    address && ["getSchedule", address],
-    fetchSchedule
+    address && [
+      "getSchedule",
+      { endpoint: getValue("apiRoot"), path: address },
+    ],
+    Fetch
   );
+
   const suggest = async (query, populateResults) => {
-    const addresses = await fetchAddresses(query);
+    const addresses = await Fetch("address", {
+      endpoint: getValue("addressLookupEndpoint"),
+      path: query,
+    });
     populateResults(addresses);
   };
 
