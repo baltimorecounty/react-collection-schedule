@@ -17,14 +17,13 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
    * Template used to display autocomplete results
    * @param {object} address parts of an address
    */
-  const templateFn = (address) => {
-    return address
+  const templateFn = (address) =>
+    address
       ? `${address.StreetAddress} ${address.City} ${address.Zip}`
           .split(" ")
           .map((item) => CapitalizeFirstLetter(item))
           .join(" ")
       : "";
-  };
 
   return (
     <div className="dg_form-field">
