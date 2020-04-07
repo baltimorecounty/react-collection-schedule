@@ -13,7 +13,6 @@ const { getValue } = Config;
 
 const queryConfig = {
   refetchAllOnWindowFocus: false,
-  //   refetchOnMount: true,
 };
 
 // Run our Startup Code
