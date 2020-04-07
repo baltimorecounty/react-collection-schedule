@@ -1,3 +1,4 @@
+import { Link, HashRouter as Router } from "react-router-dom";
 import React, { useState } from "react";
 import { ReactQueryConfigProvider, useQuery } from "react-query";
 
@@ -32,6 +33,10 @@ function App() {
     Fetch
   );
 
+  const resetForm = () => {
+    setAddress({});
+  };
+
   const suggest = async (query, populateResults) => {
     const addresses = await Fetch("address", {
       endpoint: getValue("addressLookupEndpoint"),
@@ -52,30 +57,38 @@ function App() {
 
   return (
     <div className="App">
-      <ReactQueryConfigProvider config={queryConfig}>
-        {!data && (
-          <Autocomplete
-            id="address-lookup"
-            label="Find Your Collection Schedule"
-            suggest={suggest}
-            onConfirm={handleValueSelect}
-            minLength={3}
-          />
-        )}
-        {hasAddress && isFetching && <p>Loading Schedule...</p>}
-        {hasAddress && !isFetching && data && (
-          <div className="results">
-            <p>
-              <span className="font-weight-bold">Schedule for</span>:{" "}
-              {FormatAddress(address)}
-            </p>
-            <Schedule
-              selectedAddress={address.StreetAddress}
-              schedule={data[0]}
+      <Router>
+        <ReactQueryConfigProvider config={queryConfig}>
+          {!data && (
+            <Autocomplete
+              id="address-lookup"
+              label="Find Your Collection Schedule"
+              suggest={suggest}
+              onConfirm={handleValueSelect}
+              minLength={3}
             />
-          </div>
-        )}
-      </ReactQueryConfigProvider>
+          )}
+          {hasAddress && isFetching && <p>Loading Schedule...</p>}
+          {hasAddress && !isFetching && data && (
+            <div className="results">
+              <h3>Your Schedule</h3>
+              <p>Showing collection schedule for:</p>
+              <p className="font-weight-bold">{FormatAddress(address)}</p>
+              <p>
+                Not the right address?{" "}
+                <Link to="/" onClick={resetForm}>
+                  Try another search
+                </Link>
+                .
+              </p>
+              <Schedule
+                selectedAddress={address.StreetAddress}
+                schedule={data[0]}
+              />
+            </div>
+          )}
+        </ReactQueryConfigProvider>
+      </Router>
     </div>
   );
 }

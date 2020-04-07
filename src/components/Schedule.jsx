@@ -4,7 +4,7 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow
+  TableRow,
 } from "@baltimorecounty/dotgov-components";
 
 import PropTypes from "prop-types";
@@ -13,8 +13,22 @@ import React from "react";
 const Schedule = ({ schedule = {} }) => {
   const { collectionSchedules = [] } = schedule;
   const hasAtLeastOneSchedule = collectionSchedules.some(
-    schedule => schedule.nextCollectionDate
+    (schedule) => schedule.nextCollectionDate
   );
+
+  const getIconClass = (name) => {
+    switch (name.toLowerCase()) {
+      case "trash":
+        return "far fa-trash-alt";
+      case "recycling":
+        return "far fa-recycle";
+      case "yard waste":
+        return "far fa-leaf";
+      default:
+        return "";
+    }
+  };
+
   return hasAtLeastOneSchedule ? (
     <Table>
       <TableHead>
@@ -28,7 +42,14 @@ const Schedule = ({ schedule = {} }) => {
         {collectionSchedules.map(
           ({ name, collectionDays, nextCollectionDate }, index) => (
             <TableRow key={name}>
-              <TableCell>{name}</TableCell>
+              <TableCell style={{ verticalAlign: "middle" }}>
+                <i
+                  className={`${getIconClass(name)} fa-2x`}
+                  style={{ marginRight: "10px" }}
+                  aria-hidden="true"
+                ></i>
+                {name}
+              </TableCell>
               <TableCell>
                 {collectionDays.length > 0
                   ? collectionDays.join(",")
@@ -51,7 +72,7 @@ const Schedule = ({ schedule = {} }) => {
 
 Schedule.propTypes = {
   /** Schedule Data */
-  schedule: PropTypes.object.isRequired
+  schedule: PropTypes.object.isRequired,
 };
 
 export default Schedule;
