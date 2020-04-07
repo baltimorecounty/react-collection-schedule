@@ -30,7 +30,7 @@ const Schedule = ({ schedule = {} }) => {
   };
 
   return hasAtLeastOneSchedule ? (
-    <Table>
+    <Table className="table-fixed">
       <TableHead>
         <TableRow>
           <TableHeadCell>Type</TableHeadCell>
@@ -44,7 +44,9 @@ const Schedule = ({ schedule = {} }) => {
             <TableRow key={name}>
               <TableCell style={{ verticalAlign: "middle" }}>
                 <i
-                  className={`${getIconClass(name)} fa-2x`}
+                  className={`d-sm-none d-none d-md-inline ${getIconClass(
+                    name
+                  )} fa-2x`}
                   style={{ marginRight: "10px" }}
                   aria-hidden="true"
                 ></i>
