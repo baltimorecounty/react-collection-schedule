@@ -15,8 +15,9 @@ const isBeta = window.location.hostname.indexOf("beta") > -1;
 const localApiRoot = isBeta
   ? testApiRoot
   : "http://localhost:53001/api/Schedule";
+const testAddressLookup = `https://testservices.baltimorecountymd.gov/${addressLookupEndpoint}`;
 const localAddressLookup = isBeta
-  ? `https://testservices.baltimorecountymd.gov/${addressLookupEndpoint}`
+  ? testAddressLookup
   : `http://localhost:54727/${addressLookupEndpoint}`;
 
 const configValues = {
@@ -27,6 +28,10 @@ const configValues = {
   development: {
     apiRoot: testApiRoot,
     addressLookupEndpoint: localAddressLookup,
+  },
+  staging: {
+    apiRoot: testApiRoot,
+    addressLookupEndpoint: testAddressLookup,
   },
   production: {
     apiRoot: prodApiRoot,
