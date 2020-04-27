@@ -1,5 +1,6 @@
 import "accessible-autocomplete/dist/accessible-autocomplete.min.css";
 
+import { FormatAddress } from "../common/Formatters";
 import PropTypes from "prop-types";
 import React from "react";
 import UkAutocomplete from "accessible-autocomplete/react";
@@ -24,6 +25,10 @@ const Autocomplete = ({ id, suggest, label, ...rest }) => {
         className="dg_form-field_input--text"
         source={handleSource}
         showNoOptionsFound={false}
+        templates={{
+          inputValue: FormatAddress,
+          suggestion: FormatAddress,
+        }}
         {...rest}
       />
     </div>
@@ -36,7 +41,7 @@ Autocomplete.prototypes = {
   /** Label to describe the input */
   label: PropTypes.string,
   /** Suggest function populates the autocomplete values */
-  suggest: PropTypes.func.isRequired
+  suggest: PropTypes.func.isRequired,
 };
 
 export default Autocomplete;
