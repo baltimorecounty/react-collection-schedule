@@ -40,7 +40,7 @@ function App() {
       endpoint: getValue("suggestEndpoint"),
       queryString: `?partialAddress=${query}`,
     });
-    populateResults(suggestions.map((x) => x.text));
+    populateResults(suggestions.map(({ text }) => text));
   };
 
   const handleValueSelect = (selectedValue) => {
