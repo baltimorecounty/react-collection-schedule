@@ -2,17 +2,20 @@ import { Config } from "@baltimorecounty/javascript-utilities";
 
 const { setConfig } = Config;
 
-const localHosts = {
-  gis: "http://localhost:54727",
-  collectionSchedule: "http://localhost:53001",
-};
+const localHost = "http://localhost:54727";
 const testHost = "https://testservices.baltimorecountymd.gov";
 const prodHost = "https://services.baltimorecountymd.gov";
 
 // HACK - the Config utility does not account for beta.
 // TODO: This will need to be addressed when we get closer to launch
 
-const buildApiUrls = (hosts = {}, endpoint) => {
+const buildApiUrls = (endpoint) => {
+  const hosts = {
+    local: localHost,
+    development: localHost,
+    staging: testHost,
+    production: prodHost,
+  };
   const isBeta = window.location.hostname.indexOf("beta") > -1;
   return Object.keys(hosts).reduce((prev, currentKey) => {
     prev[currentKey] = isBeta
@@ -23,31 +26,9 @@ const buildApiUrls = (hosts = {}, endpoint) => {
 };
 
 const urls = {
-  collectionSchedule: buildApiUrls(
-    {
-      local: localHosts.collectionSchedule,
-      development: localHosts.collectionSchedule,
-      staging: testHost,
-      production: prodHost,
-    },
-    "/api/hub/collectionSchedule/schedule"
-  ),
-  suggest: buildApiUrls(
-    {
-      local: localHosts.gis,
-      development: localHosts.gis,
-      staging: testHost,
-      production: prodHost,
-    },
-    "api/hub/gis/Geocoder/suggest"
-  ),
+  collectionSchedule: buildApiUrls("api/hub/collectionSchedule/schedule"),
+  suggest: buildApiUrls("api/hub/gis/Geocoder/suggest"),
   findAddressCandidates: buildApiUrls(
-    {
-      local: localHosts.gis,
-      development: localHosts.gis,
-      staging: testHost,
-      production: prodHost,
-    },
     "api/hub/gis/Geocoder/findAddressCandidates"
   ),
 };

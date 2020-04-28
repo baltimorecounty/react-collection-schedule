@@ -21,8 +21,8 @@ function App() {
     hasAddress && [
       "getSchedule",
       {
-        endpoint: getValue("apiRoot"),
-        path: address.StreetAddress,
+        endpoint: getValue("collectionSchedule"),
+        path: address,
       },
     ],
     Fetch,
@@ -32,12 +32,12 @@ function App() {
   );
 
   const resetForm = () => {
-    setAddress({});
+    setAddress("");
   };
 
   const suggest = async (query, populateResults) => {
     const { suggestions = [] } = await Fetch("address", {
-      endpoint: getValue("suggestEndpoint"),
+      endpoint: getValue("suggest"),
       queryString: `?partialAddress=${query}`,
     });
     populateResults(suggestions.map(({ text }) => text));
