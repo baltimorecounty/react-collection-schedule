@@ -2,7 +2,7 @@ import { Config } from "@baltimorecounty/javascript-utilities";
 
 const { setConfig } = Config;
 
-const addressLookupEndpoint = "api/gis/addressLookup";
+const suggestEndpoint = "api/hub/gis/Geocoder/suggest";
 const collectionScheduleEndpoint = "api/hub/collectionSchedule/schedule";
 
 const testApiRoot = `https://testservices.baltimorecountymd.gov/${collectionScheduleEndpoint}`;
@@ -15,27 +15,27 @@ const isBeta = window.location.hostname.indexOf("beta") > -1;
 const localApiRoot = isBeta
   ? testApiRoot
   : "http://localhost:53001/api/Schedule";
-const testAddressLookup = `https://testservices.baltimorecountymd.gov/${addressLookupEndpoint}`;
+const testAddressLookup = `https://testservices.baltimorecountymd.gov/${suggestEndpoint}`;
 const localAddressLookup = isBeta
   ? testAddressLookup
-  : `http://localhost:54727/${addressLookupEndpoint}`;
+  : `http://localhost:54727/${suggestEndpoint}`;
 
 const configValues = {
   local: {
     apiRoot: localApiRoot,
-    addressLookupEndpoint: localAddressLookup,
+    suggestEndpoint: localAddressLookup,
   },
   development: {
     apiRoot: testApiRoot,
-    addressLookupEndpoint: localAddressLookup,
+    suggestEndpoint: localAddressLookup,
   },
   staging: {
     apiRoot: testApiRoot,
-    addressLookupEndpoint: testAddressLookup,
+    suggestEndpoint: testAddressLookup,
   },
   production: {
     apiRoot: prodApiRoot,
-    addressLookupEndpoint: `https://services.baltimorecountymd.gov/${addressLookupEndpoint}`,
+    suggestEndpoint: `https://services.baltimorecountymd.gov/${suggestEndpoint}`,
   },
 };
 

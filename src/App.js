@@ -36,11 +36,11 @@ function App() {
   };
 
   const suggest = async (query, populateResults) => {
-    const addresses = await Fetch("address", {
-      endpoint: getValue("addressLookupEndpoint"),
-      path: query,
+    const { suggestions = [] } = await Fetch("address", {
+      endpoint: getValue("suggestEndpoint"),
+      queryString: `?partialAddress=${query}`,
     });
-    populateResults(addresses);
+    populateResults(suggestions.map((x) => x.text));
   };
 
   const handleValueSelect = (selectedValue) => {
