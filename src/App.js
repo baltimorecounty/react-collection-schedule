@@ -15,14 +15,13 @@ const { getValue } = Config;
 Run();
 
 function App() {
-  const [address, setAddress] = useState({});
-  const hasAddress = Object.keys(address).length > 0;
-  const { data, error, isFetching } = useQuery(
-    hasAddress && [
-      "getSchedule",
+  const [suggestion, setSuggestion] = useState("");
+  const { data: addressCandidates, error, isFetching } = useQuery(
+    suggestion && [
+      "getAddress",
       {
-        endpoint: getValue("collectionSchedule"),
-        path: address,
+        endpoint: getValue("findAddressCandidates"),
+        queryString: `?address=${suggestion}`,
       },
     ],
     Fetch,
@@ -31,8 +30,30 @@ function App() {
     }
   );
 
+  const { candidates = [] } = addressCandidates || {};
+  const hasAddressCandidates = candidates.length > 0;
+
+  const {
+    data: schedule,
+    status: scheduleStatus,
+    isFetching: isScheduleFetching,
+  } = useQuery(
+    suggestion &&
+      hasAddressCandidates && [
+        "getSchedule",
+        {
+          endpoint: getValue("collectionSchedule"),
+          path: `${candidates[0].attributes.placeName}`,
+        },
+      ],
+    Fetch,
+    {
+      refetchAllOnWindowFocus: false,
+    }
+  );
+
   const resetForm = () => {
-    setAddress("");
+    setSuggestion("");
   };
 
   const suggest = async (query, populateResults) => {
@@ -44,7 +65,7 @@ function App() {
   };
 
   const handleValueSelect = (selectedValue) => {
-    setAddress(selectedValue ? selectedValue : {});
+    setSuggestion(selectedValue);
   };
 
   if (error) {
@@ -56,7 +77,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        {!data && (
+        {!hasAddressCandidates && (
           <Autocomplete
             id="address-lookup"
             label="Find Your Collection Schedule"
@@ -65,12 +86,14 @@ function App() {
             minLength={3}
           />
         )}
-        {hasAddress && isFetching && <p>Loading Schedule...</p>}
-        {hasAddress && !isFetching && data && (
+        {hasAddressCandidates && isScheduleFetching && (
+          <p>Loading Schedule...</p>
+        )}
+        {hasAddressCandidates && !isScheduleFetching && schedule && (
           <div className="results">
             <h3>Your Schedule</h3>
             <p>Showing collection schedule for:</p>
-            <p className="font-weight-bold">{FormatAddress(address)}</p>
+            <p className="font-weight-bold">{FormatAddress(suggestion)}</p>
             <p>
               Not the right address?{" "}
               <Link to="/" onClick={resetForm}>
@@ -78,10 +101,7 @@ function App() {
               </Link>
               .
             </p>
-            <Schedule
-              selectedAddress={address.StreetAddress}
-              schedule={data[0]}
-            />
+            <Schedule selectedAddress={suggestion} schedule={schedule} />
           </div>
         )}
       </Router>
