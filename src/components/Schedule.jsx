@@ -7,11 +7,26 @@ import {
   TableRow,
 } from "@baltimorecounty/dotgov-components";
 
+import CommercialAlert from "./CommercialAlert";
+import InActiveRouteAlert from "./InActiveRouteAlert";
 import PropTypes from "prop-types";
 import React from "react";
 
 const Schedule = ({ schedule = {} }) => {
-  const { collectionSchedules = [] } = schedule;
+  const {
+    collectionSchedules = [],
+    isSingleFamilyHome,
+    isActiveRoute,
+  } = schedule;
+
+  if (!isActiveRoute) {
+    return <InActiveRouteAlert />;
+  }
+
+  if (!isSingleFamilyHome) {
+    return <CommercialAlert />;
+  }
+
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
