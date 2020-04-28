@@ -18,9 +18,6 @@ const Schedule = ({ schedule = {} }) => {
     isSingleFamilyHome,
     isActiveRoute,
   } = schedule;
-  const hasAtLeastOneSchedule = collectionSchedules.some(
-    (schedule) => schedule.nextCollectionDate
-  );
 
   if (!isActiveRoute) {
     return <InActiveRouteAlert />;
@@ -30,8 +27,25 @@ const Schedule = ({ schedule = {} }) => {
     return <CommercialAlert />;
   }
 
+  const hasAtLeastOneSchedule = collectionSchedules.some(
+    (schedule) => schedule.nextCollectionDate
+  );
+
+  const getIconClass = (name) => {
+    switch (name.toLowerCase()) {
+      case "trash":
+        return "far fa-trash-alt";
+      case "recycling":
+        return "far fa-recycle";
+      case "yard waste":
+        return "far fa-leaf";
+      default:
+        return "";
+    }
+  };
+
   return hasAtLeastOneSchedule ? (
-    <Table>
+    <Table className="table-fixed">
       <TableHead>
         <TableRow>
           <TableHeadCell>Type</TableHeadCell>
@@ -43,7 +57,16 @@ const Schedule = ({ schedule = {} }) => {
         {collectionSchedules.map(
           ({ name, collectionDays, nextCollectionDate }, index) => (
             <TableRow key={name}>
-              <TableCell>{name}</TableCell>
+              <TableCell style={{ verticalAlign: "middle" }}>
+                <i
+                  className={`d-sm-none d-none d-md-inline ${getIconClass(
+                    name
+                  )} fa-2x`}
+                  style={{ marginRight: "10px" }}
+                  aria-hidden="true"
+                ></i>
+                {name}
+              </TableCell>
               <TableCell>
                 {collectionDays.length > 0
                   ? collectionDays.join(",")

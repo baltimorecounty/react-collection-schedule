@@ -6,7 +6,7 @@ const capitalizeFirstLetter = (string) =>
  */
 const FormatAddress = (address = {}) =>
   address
-    ? `${address.StreetAddress} ${address.City} ${address.Zip}`
+    ? `${address.StreetAddress}, ${address.City}, ${address.Zip}`
         .split(" ")
         .map((item) => capitalizeFirstLetter(item))
         .join(" ")

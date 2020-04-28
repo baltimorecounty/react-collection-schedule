@@ -1,4 +1,6 @@
+import { Link, HashRouter as Router } from "react-router-dom";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 
 import Autocomplete from "./components/Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
@@ -6,7 +8,6 @@ import Fetch from "./common/Fetch";
 import { FormatAddress } from "./common/Formatters";
 import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
-import { useQuery } from "react-query";
 
 const { getValue } = Config;
 
@@ -24,8 +25,15 @@ function App() {
         path: address.StreetAddress,
       },
     ],
-    Fetch
+    Fetch,
+    {
+      refetchAllOnWindowFocus: false,
+    }
   );
+
+  const resetForm = () => {
+    setAddress({});
+  };
 
   const suggest = async (query, populateResults) => {
     const addresses = await Fetch("address", {
@@ -47,25 +55,36 @@ function App() {
 
   return (
     <div className="App">
-      {!data && (
-        <Autocomplete
-          id="address-lookup"
-          label="Find Your Collection Schedule"
-          suggest={suggest}
-          onConfirm={handleValueSelect}
-          minLength={3}
-        />
-      )}
-      {hasAddress && isFetching && <p>Loading Schedule...</p>}
-      {hasAddress && !isFetching && data && (
-        <div className="results">
-          <p>Selected Address: {FormatAddress(address)}</p>
-          <Schedule
-            selectedAddress={address.StreetAddress}
-            schedule={data[0]}
+      <Router>
+        {!data && (
+          <Autocomplete
+            id="address-lookup"
+            label="Find Your Collection Schedule"
+            suggest={suggest}
+            onConfirm={handleValueSelect}
+            minLength={3}
           />
-        </div>
-      )}
+        )}
+        {hasAddress && isFetching && <p>Loading Schedule...</p>}
+        {hasAddress && !isFetching && data && (
+          <div className="results">
+            <h3>Your Schedule</h3>
+            <p>Showing collection schedule for:</p>
+            <p className="font-weight-bold">{FormatAddress(address)}</p>
+            <p>
+              Not the right address?{" "}
+              <Link to="/" onClick={resetForm}>
+                Try another search
+              </Link>
+              .
+            </p>
+            <Schedule
+              selectedAddress={address.StreetAddress}
+              schedule={data[0]}
+            />
+          </div>
+        )}
+      </Router>
     </div>
   );
 }
