@@ -20,7 +20,7 @@ const buildApiUrls = (endpoint) => {
   const isBeta = window.location.hostname.indexOf("beta") > -1;
   return Object.keys(hosts).reduce((prev, currentKey) => {
     prev[currentKey] = isBeta
-      ? `${hosts["test"]}/${endpoint}`
+      ? `${hosts["staging"]}/${endpoint}`
       : `${hosts[currentKey]}/${endpoint}`;
     return prev;
   }, {});
