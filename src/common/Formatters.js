@@ -4,12 +4,11 @@ const capitalizeFirstLetter = (string) =>
 /**
  * Format an address to a friendly format
  */
-const FormatAddress = (address = {}) =>
+const FormatAddress = (address = "") =>
   address
-    ? `${address.StreetAddress}, ${address.City}, ${address.Zip}`
-        .split(" ")
-        .map((item) => capitalizeFirstLetter(item))
-        .join(" ")
-    : "";
+    .toLowerCase()
+    .split(" ")
+    .map((item) => capitalizeFirstLetter(item))
+    .join(" ");
 
 export { FormatAddress };

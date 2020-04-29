@@ -6,8 +6,11 @@ import "whatwg-fetch";
  * @param {object} object
  * @param {object.endpoint} api endpoint
  * @param {object.path} path path for endpoint (path)
+ * @param {object.queryString} queryString querystring for the url, must include ?
  */
-const Fetch = (key, { endpoint, path }) =>
-  fetch(`${endpoint}/${path}`).then((res) => res.json());
+const Fetch = (key, { endpoint, path, queryString }) =>
+  fetch(
+    `${endpoint}${path ? `/${path}` : ""}${queryString || ""}`
+  ).then((res) => res.json());
 
 export default Fetch;
