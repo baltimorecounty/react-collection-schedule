@@ -16,7 +16,7 @@ Run();
 
 function App() {
   const [suggestion, setSuggestion] = useState("");
-  const { data: addressCandidates, error, isFetching } = useQuery(
+  const { data: addressCandidates, status } = useQuery(
     suggestion && [
       "getAddress",
       {
@@ -33,7 +33,11 @@ function App() {
   const { candidates = [] } = addressCandidates || {};
   const hasAddressCandidates = candidates.length > 0;
 
-  const { data: schedule, isFetching: isScheduleFetching } = useQuery(
+  const {
+    data: schedule,
+    isFetching: isScheduleFetching,
+    status: scheduleStatus,
+  } = useQuery(
     suggestion &&
       hasAddressCandidates && [
         "getSchedule",
@@ -64,7 +68,7 @@ function App() {
     setSuggestion(selectedValue);
   };
 
-  if (error) {
+  if (status === "error" || scheduleStatus === "error") {
     return (
       <p>Something went wrong. Please try again in a couple of minutes.</p>
     );
