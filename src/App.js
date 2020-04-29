@@ -33,11 +33,7 @@ function App() {
   const { candidates = [] } = addressCandidates || {};
   const hasAddressCandidates = candidates.length > 0;
 
-  const {
-    data: schedule,
-    status: scheduleStatus,
-    isFetching: isScheduleFetching,
-  } = useQuery(
+  const { data: schedule, isFetching: isScheduleFetching } = useQuery(
     suggestion &&
       hasAddressCandidates && [
         "getSchedule",
