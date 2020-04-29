@@ -6,9 +6,10 @@ const localHost = "http://localhost:54727";
 const testHost = "https://testservices.baltimorecountymd.gov";
 const prodHost = "https://services.baltimorecountymd.gov";
 
-// HACK - the Config utility does not account for beta.
-// TODO: This will need to be addressed when we get closer to launch
-
+/**
+ * Build Api Urls based on hosts and a given endpoint.
+ * Hosts are specified by environment
+ */
 const buildApiUrls = (endpoint) => {
   const hosts = {
     local: localHost,
@@ -33,7 +34,9 @@ const urls = {
   ),
 };
 
-//TODO: We need to merge urls for shared properties
+/**
+ * Convert Urls to Desired Format for Configs
+ */
 const buildConfig = (urls = {}) =>
   Object.keys(urls).reduce(
     (prev, urlSetName) => {
