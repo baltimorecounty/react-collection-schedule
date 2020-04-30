@@ -133,6 +133,8 @@ function App() {
 
   //TODO: We need to handle a null schedule, and what happens if no schedule is resturned at all, guessing we need inactive alert.
   // Follow up wiht nick
+  // also think autcomplete disables ability to hit enter which is good
+  // ie polyfill?
 
   return (
     <div className="App">
