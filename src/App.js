@@ -15,7 +15,9 @@ const { getValue } = Config;
 Run();
 
 function App() {
-  const [suggestion, setSuggestion] = useState("");
+  const [{ suggestion, status: suggestionStatus }, setSuggestion] = useState(
+    ""
+  );
   const { data: addressCandidates, status } = useQuery(
     suggestion && [
       "getAddress",
@@ -53,22 +55,44 @@ function App() {
   );
 
   const resetForm = () => {
-    setSuggestion("");
+    setSuggestion({
+      suggestion: "",
+      status: "success",
+    });
   };
 
   const suggest = async (query, populateResults) => {
-    const { suggestions = [] } = await Fetch("address", {
-      endpoint: getValue("suggest"),
-      queryString: `?partialAddress=${query}`,
-    });
-    populateResults(suggestions.map(({ text }) => text));
+    try {
+      const { suggestions = [] } = await Fetch("address", {
+        endpoint: getValue("suggest"),
+        queryString: `?partialAddress=${query}`,
+      });
+      populateResults(suggestions.map(({ text }) => text));
+    } catch (ex) {
+      setSuggestion({
+        suggestion: null,
+        status: "error",
+      });
+    }
   };
 
   const handleValueSelect = (selectedValue) => {
-    setSuggestion(selectedValue);
+    setSuggestion({
+      suggestion: selectedValue,
+      status: "success",
+    });
   };
 
-  if (status === "error" || scheduleStatus === "error") {
+  const handleSubmit = (submitEvent) => {
+    submitEvent.preventDefault();
+    const formSuggestion = document.getElementById("address-lookup").value;
+    setSuggestion({
+      suggestion: formSuggestion,
+      status: "success",
+    });
+  };
+
+  if ([status, scheduleStatus, suggestionStatus].some((x) => x === "error")) {
     return (
       <p>Something went wrong. Please try again in a couple of minutes.</p>
     );
@@ -78,13 +102,15 @@ function App() {
     <div className="App">
       <Router>
         {!hasAddressCandidates && (
-          <Autocomplete
-            id="address-lookup"
-            label="Find Your Collection Schedule"
-            suggest={suggest}
-            onConfirm={handleValueSelect}
-            minLength={3}
-          />
+          <form onSubmit={handleSubmit}>
+            <Autocomplete
+              id="address-lookup"
+              label="Find Your Collection Schedule"
+              suggest={suggest}
+              onConfirm={handleValueSelect}
+              minLength={3}
+            />
+          </form>
         )}
         {hasAddressCandidates && isScheduleFetching && (
           <p>Loading Schedule...</p>
