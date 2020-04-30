@@ -42,7 +42,6 @@ const buildConfig = (urls = {}) =>
     (prev, urlSetName) => {
       const urlSet = urls[urlSetName];
       Object.keys(urlSet).forEach((env) => {
-        console.log(prev[env]);
         prev[env][urlSetName] = urlSet[env];
       });
       return prev;
