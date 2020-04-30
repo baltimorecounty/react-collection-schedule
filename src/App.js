@@ -8,6 +8,9 @@ import Fetch from "./common/Fetch";
 import { FormatAddress } from "./common/Formatters";
 import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
+import InActiveRouteAlert from "./components/InActiveRouteAlert";
+import SomethingWentWrongAlert from "./components/SomethingWentWrongAlert";
+import { Button } from "@baltimorecounty/dotgov-components";
 
 const { getValue } = Config;
 
@@ -16,6 +19,9 @@ Run();
 
 function App() {
   const [{ suggestion, status: suggestionStatus }, setSuggestion] = useState(
+    ""
+  );
+  const [{ suggestions, status: suggestionsStatus }, setSuggestions] = useState(
     ""
   );
   const { data: addressCandidates, status } = useQuery(
@@ -61,13 +67,19 @@ function App() {
     });
   };
 
+  const getSuggestions = async (query) => {
+    const { suggestions = [] } = await Fetch("address", {
+      endpoint: getValue("suggest"),
+      queryString: `?partialAddress=${query}`,
+    });
+    return suggestions.map(({ text }) => text);
+  };
+
   const suggest = async (query, populateResults) => {
+    setSuggestions({});
     try {
-      const { suggestions = [] } = await Fetch("address", {
-        endpoint: getValue("suggest"),
-        queryString: `?partialAddress=${query}`,
-      });
-      populateResults(suggestions.map(({ text }) => text));
+      const suggestions = await getSuggestions(query);
+      populateResults(suggestions);
     } catch (ex) {
       setSuggestion({
         suggestion: null,
@@ -81,22 +93,46 @@ function App() {
       suggestion: selectedValue,
       status: "success",
     });
+    setSuggestions({});
   };
 
-  const handleSubmit = (submitEvent) => {
+  const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-    const formSuggestion = document.getElementById("address-lookup").value;
+    const addressQuery = document.getElementById("address-lookup").value;
+
+    const suggestions = await getSuggestions(addressQuery);
+
+    if (suggestions && suggestions.length > 1) {
+      setSuggestions({
+        suggestions,
+        status: "success",
+      });
+    } else {
+      setSuggestions({
+        suggestions,
+        status: "error",
+      });
+    }
+  };
+
+  const handleSuggestionClick = (suggestionText) => {
     setSuggestion({
-      suggestion: formSuggestion,
+      suggestion: suggestionText,
       status: "success",
     });
+    setSuggestions({});
   };
 
   if ([status, scheduleStatus, suggestionStatus].some((x) => x === "error")) {
-    return (
-      <p>Something went wrong. Please try again in a couple of minutes.</p>
-    );
+    return <SomethingWentWrongAlert />;
   }
+
+  if (suggestionsStatus === "error") {
+    return <InActiveRouteAlert />;
+  }
+
+  //TODO: We need to handle a null schedule, and what happens if no schedule is resturned at all, guessing we need inactive alert.
+  // Follow up wiht nick
 
   return (
     <div className="App">
@@ -110,7 +146,23 @@ function App() {
               onConfirm={handleValueSelect}
               minLength={3}
             />
+            <button type="submit">Submit</button>
           </form>
+        )}
+        {suggestions && suggestions.length > 0 && (
+          <>
+            <h3>Did you mean?</h3>
+            {suggestions.map((text, magicKey) => (
+              <Button
+                className="dg_button-link"
+                key={magicKey}
+                onClick={() =>
+                  console.log("here") || handleSuggestionClick(text)
+                }
+                text={text}
+              />
+            ))}
+          </>
         )}
         {hasAddressCandidates && isScheduleFetching && (
           <p>Loading Schedule...</p>
