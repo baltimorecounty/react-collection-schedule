@@ -34,7 +34,9 @@ const Schedule = ({ schedule = {} }) => {
       {pdfLink && (
         <>
           <h3>Download</h3>
-          <a href={pdfLink}>Download your complete four-year schedule.</a>
+          <a href={pdfLink} rel="noopener noreferrer" target="_blank">
+            Download your complete four-year collection schedule.
+          </a>
         </>
       )}
     </div>
