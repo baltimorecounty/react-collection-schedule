@@ -10,8 +10,8 @@ import { Run } from "./Startup";
 import Schedule from "./components/Schedule";
 import InActiveRouteAlert from "./components/InActiveRouteAlert";
 import SomethingWentWrongAlert from "./components/SomethingWentWrongAlert";
-import { Button } from "@baltimorecounty/dotgov-components";
 import { GetSuggestions } from "./common/Suggestions";
+import queryString from "query-string";
 
 const { getValue } = Config;
 
@@ -19,9 +19,12 @@ const { getValue } = Config;
 Run();
 
 function App() {
-  const [{ suggestion, status: suggestionStatus }, setSuggestion] = useState(
-    ""
+  const { suggestion: urlSuggestion = "" } = queryString.parse(
+    window.location.search
   );
+  const [{ suggestion, status: suggestionStatus }, setSuggestion] = useState({
+    suggestion: urlSuggestion,
+  });
   const [{ suggestions, status: suggestionsStatus }, setSuggestions] = useState(
     ""
   );
@@ -95,25 +98,10 @@ function App() {
 
     const suggestions = await GetSuggestions(addressQuery);
 
-    if (suggestions && suggestions.length > 1) {
-      setSuggestions({
-        suggestions,
-        status: "success",
-      });
-    } else {
-      setSuggestions({
-        suggestions,
-        status: "error",
-      });
-    }
-  };
-
-  const handleSuggestionClick = (suggestionText) => {
-    setSuggestion({
-      suggestion: suggestionText,
-      status: "success",
+    setSuggestions({
+      suggestions,
+      status: suggestions && suggestions.length > 0 ? "success" : "error",
     });
-    setSuggestions({});
   };
 
   if ([status, scheduleStatus, suggestionStatus].some((x) => x === "error")) {
@@ -132,7 +120,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        {!hasAddressCandidates && (
+        {!hasAddressCandidates && !urlSuggestion && (
           <form onSubmit={handleSubmit}>
             <Autocomplete
               id="address-lookup"
@@ -148,14 +136,9 @@ function App() {
           <>
             <h3>Did you mean?</h3>
             {suggestions.map((text, magicKey) => (
-              <Button
-                className="dg_button-link"
-                key={magicKey}
-                onClick={() =>
-                  console.log("here") || handleSuggestionClick(text)
-                }
-                text={text}
-              />
+              <a key={magicKey} href={`?address=${text}`}>
+                {text}
+              </a>
             ))}
           </>
         )}
@@ -166,7 +149,9 @@ function App() {
           <div className="results">
             <h3>Your Schedule</h3>
             <p>Showing collection schedule for:</p>
-            <p className="font-weight-bold">{FormatAddress(suggestion)}</p>
+            <p className="font-weight-bold">
+              {FormatAddress(candidates[0].attributes.match_Addr)}
+            </p>
             <p>
               Not the right address?{" "}
               <Link to="/" onClick={resetForm}>
