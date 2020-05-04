@@ -1,16 +1,48 @@
 import CommercialAlert from "./CommercialAlert";
 import InActiveRouteAlert from "./InActiveRouteAlert";
-import PropTypes from "prop-types";
 import React from "react";
 import ScheduleTable from "./ScheduleTable";
+import { Link, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Config } from "@baltimorecounty/javascript-utilities";
+import Fetch from "../common/Fetch";
+import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
+import { FormatAddress } from "../common/Formatters";
 
-const Schedule = ({ schedule = {} }) => {
+const { getValue } = Config;
+
+const Schedule = () => {
+  const { address } = useParams();
+
+  const { data, isFetching, status } = useQuery(
+    address && [
+      "getSchedule",
+      {
+        endpoint: getValue("collectionSchedule"),
+        path: `${address}`,
+      },
+    ],
+    Fetch,
+    {
+      refetchOnWindowFocus: false,
+      retries: false,
+    }
+  );
+
+  if (!data) {
+    return <p>Loading collection schedule for {FormatAddress(address)}...</p>;
+  }
+
+  if (status === "error") {
+    return <SomethingWentWrongAlert />;
+  }
+
   const {
     collectionSchedules = [],
     isSingleFamilyHome,
     isActiveRoute,
     pdfLink,
-  } = schedule;
+  } = data;
 
   if (!isActiveRoute) {
     return <InActiveRouteAlert />;
@@ -26,6 +58,14 @@ const Schedule = ({ schedule = {} }) => {
 
   return (
     <div>
+      <div className="results">
+        <h3>Your Schedule</h3>
+        <p>Showing collection schedule for:</p>
+        <p className="font-weight-bold">{FormatAddress(address)}</p>
+        <p>
+          Not the right address? <Link to="/">Try another search</Link>.
+        </p>
+      </div>
       {hasAtLeastOneSchedule ? (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       ) : (
@@ -41,11 +81,6 @@ const Schedule = ({ schedule = {} }) => {
       )}
     </div>
   );
-};
-
-Schedule.propTypes = {
-  /** Schedule Data */
-  schedule: PropTypes.object.isRequired,
 };
 
 export default Schedule;
