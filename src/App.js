@@ -12,6 +12,7 @@ import InActiveRouteAlert from "./components/InActiveRouteAlert";
 import SomethingWentWrongAlert from "./components/SomethingWentWrongAlert";
 import { GetSuggestions } from "./common/Suggestions";
 import queryString from "query-string";
+import Suggestions from "./components/Suggestions";
 
 const { getValue } = Config;
 
@@ -133,14 +134,7 @@ function App() {
           </form>
         )}
         {suggestions && suggestions.length > 0 && (
-          <>
-            <h3>Did you mean?</h3>
-            {suggestions.map((text, magicKey) => (
-              <a key={magicKey} href={`?suggestion=${text}`}>
-                {text}
-              </a>
-            ))}
-          </>
+          <Suggestions suggestions={suggestions} />
         )}
         {hasAddressCandidates && isScheduleFetching && (
           <p>Loading Schedule...</p>
