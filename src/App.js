@@ -11,6 +11,7 @@ import Schedule from "./components/Schedule";
 import InActiveRouteAlert from "./components/InActiveRouteAlert";
 import SomethingWentWrongAlert from "./components/SomethingWentWrongAlert";
 import { Button } from "@baltimorecounty/dotgov-components";
+import { GetSuggestions } from "./common/Suggestions";
 
 const { getValue } = Config;
 
@@ -67,18 +68,10 @@ function App() {
     });
   };
 
-  const getSuggestions = async (query) => {
-    const { suggestions = [] } = await Fetch("address", {
-      endpoint: getValue("suggest"),
-      queryString: `?partialAddress=${query}`,
-    });
-    return suggestions.map(({ text }) => text);
-  };
-
   const suggest = async (query, populateResults) => {
     setSuggestions({});
     try {
-      const suggestions = await getSuggestions(query);
+      const suggestions = await GetSuggestions(query);
       populateResults(suggestions);
     } catch (ex) {
       setSuggestion({
@@ -100,7 +93,7 @@ function App() {
     submitEvent.preventDefault();
     const addressQuery = document.getElementById("address-lookup").value;
 
-    const suggestions = await getSuggestions(addressQuery);
+    const suggestions = await GetSuggestions(addressQuery);
 
     if (suggestions && suggestions.length > 1) {
       setSuggestions({
