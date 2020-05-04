@@ -1,4 +1,4 @@
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 
@@ -12,8 +12,9 @@ import { Config } from "@baltimorecounty/javascript-utilities";
 const { getValue } = Config;
 
 const FindScheduleForm = () => {
+  const { suggestion: urlSuggestion = "" } = useParams();
   const [{ suggestion, status: suggestionStatus }, setSuggestion] = useState({
-    suggestion: "",
+    suggestion: urlSuggestion,
   });
   const [{ suggestions, status: suggestionsStatus }, setSuggestions] = useState(
     {
@@ -79,7 +80,7 @@ const FindScheduleForm = () => {
   }
 
   if (hasAddressCandidates) {
-    return <Redirect to={`/${candidates[0].attributes.placeName}`} />;
+    return <Redirect to={`/schedule/${candidates[0].attributes.placeName}`} />;
   }
 
   return (
