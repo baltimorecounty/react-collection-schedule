@@ -42,9 +42,10 @@ const Schedule = () => {
     isSingleFamilyHome,
     isActiveRoute,
     pdfLink,
+    status: httpStatus,
   } = data;
 
-  if (!isActiveRoute) {
+  if (!isActiveRoute || httpStatus === 404) {
     return <InActiveRouteAlert />;
   }
 
