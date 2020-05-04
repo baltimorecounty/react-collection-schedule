@@ -136,7 +136,7 @@ function App() {
           <>
             <h3>Did you mean?</h3>
             {suggestions.map((text, magicKey) => (
-              <a key={magicKey} href={`?address=${text}`}>
+              <a key={magicKey} href={`?suggestion=${text}`}>
                 {text}
               </a>
             ))}
