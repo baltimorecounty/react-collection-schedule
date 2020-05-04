@@ -26,7 +26,7 @@ function App() {
     ],
     Fetch,
     {
-      refetchAllOnWindowFocus: false,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -48,7 +48,7 @@ function App() {
       ],
     Fetch,
     {
-      refetchAllOnWindowFocus: false,
+      refetchOnWindowFocus: false,
     }
   );
 
