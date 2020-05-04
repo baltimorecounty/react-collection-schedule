@@ -11,6 +11,6 @@ import "whatwg-fetch";
 const Fetch = (key, { endpoint, path, queryString }) =>
   fetch(
     `${endpoint}${path ? `/${path}` : ""}${queryString || ""}`
-  ).then((res) => res.json());
+  ).then((res) => (res.status === 200 ? res.json() : { status: res.status }));
 
 export default Fetch;
