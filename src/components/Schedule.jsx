@@ -14,7 +14,6 @@ const { getValue } = Config;
 
 const Schedule = () => {
   const { address } = useParams();
-
   const { data, status } = useQuery(
     address && [
       "getSchedule",
