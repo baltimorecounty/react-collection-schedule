@@ -8,7 +8,7 @@ import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "../common/Fetch";
 import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import { FormatAddress } from "../common/Formatters";
-import ResetForm from "./ResetForm";
+import WrongAddressMessage from "./WrongAddressMessage";
 
 const { getValue } = Config;
 
@@ -56,7 +56,7 @@ const Schedule = () => {
         <h3>Your Schedule</h3>
         <p>Showing results for:</p>
         <p className="font-weight-bold">{FormatAddress(address)}</p>
-        <ResetForm />
+        <WrongAddressMessage />
       </div>
       {!isActiveRoute || httpStatus === 404 || !hasAtLeastOneSchedule ? (
         <InActiveRouteAlert />
