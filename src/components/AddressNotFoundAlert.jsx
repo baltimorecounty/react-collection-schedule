@@ -10,8 +10,8 @@ const AddressNotFoundAlert = () => (
   >
     <p>The address provided does not match our records.</p>
     <p>
-      If the address is correct, please contact Customer Service at 410-887-2000
-      Monday - Friday from 7:30 a.m. - 4 p.m.
+      If the address is correct, please contact Customer Service at
+      410-887-2000. They can be reached Monday - Friday from 7:30 a.m. - 4 p.m.
     </p>
   </Alert>
 );
