@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import Autocomplete from "./Autocomplete";
 import Fetch from "../common/Fetch";
-import InActiveRouteAlert from "./InActiveRouteAlert";
+import AddressNotFoundAlert from "./AddressNotFoundAlert";
 import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import { GetSuggestions } from "../common/Suggestions";
 import Suggestions from "./Suggestions";
@@ -78,7 +78,7 @@ const FindScheduleForm = () => {
   }
 
   if (suggestionsStatus === "error") {
-    return <InActiveRouteAlert />;
+    return <AddressNotFoundAlert />;
   }
 
   if (hasAddressCandidates) {

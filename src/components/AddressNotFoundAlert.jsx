@@ -1,7 +1,7 @@
 import { Alert } from "@baltimorecounty/dotgov-components";
 import React from "react";
 
-const InActiveRouteAlert = () => (
+const AddressNotFoundAlert = () => (
   <Alert
     className="status"
     type="warning"
@@ -16,4 +16,4 @@ const InActiveRouteAlert = () => (
   </Alert>
 );
 
-export default InActiveRouteAlert;
+export default AddressNotFoundAlert;

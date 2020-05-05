@@ -1,5 +1,5 @@
 import CommercialAlert from "./CommercialAlert";
-import InActiveRouteAlert from "./InActiveRouteAlert";
+import AddressNotFoundAlert from "./AddressNotFoundAlert";
 import React from "react";
 import ScheduleTable from "./ScheduleTable";
 import { useParams } from "react-router-dom";
@@ -58,7 +58,7 @@ const Schedule = () => {
         <WrongAddressMessage />
       </div>
       {!isActiveRoute || httpStatus === 404 || !hasAtLeastOneSchedule ? (
-        <InActiveRouteAlert />
+        <AddressNotFoundAlert />
       ) : !isSingleFamilyHome ? (
         <CommercialAlert />
       ) : (
