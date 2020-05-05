@@ -88,6 +88,7 @@ const FindScheduleForm = () => {
   }
 
   if (hasAddressCandidates) {
+    /** We are using placename here, because the api that return only accepts a partial address. */
     return <Redirect to={`/schedule/${candidates[0].attributes.placeName}`} />;
   }
 
