@@ -8,6 +8,7 @@ import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "../common/Fetch";
 import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import { FormatAddress } from "../common/Formatters";
+import ResetForm from "./ResetForm";
 
 const { getValue } = Config;
 
@@ -45,14 +46,6 @@ const Schedule = () => {
     status: httpStatus,
   } = data;
 
-  if (!isActiveRoute || httpStatus === 404) {
-    return <InActiveRouteAlert />;
-  }
-
-  if (!isSingleFamilyHome) {
-    return <CommercialAlert />;
-  }
-
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
@@ -61,17 +54,18 @@ const Schedule = () => {
     <div>
       <div className="results">
         <h3>Your Schedule</h3>
-        <p>Showing collection schedule for:</p>
+        <p>Showing results for:</p>
         <p className="font-weight-bold">{FormatAddress(address)}</p>
-        <p>
-          Not the right address? <Link to="/">Try another search</Link>.
-        </p>
+        <ResetForm />
       </div>
-      {hasAtLeastOneSchedule ? (
-        <ScheduleTable collectionSchedules={collectionSchedules} />
+      {!isActiveRoute || httpStatus === 404 || !hasAtLeastOneSchedule ? (
+        <InActiveRouteAlert />
+      ) : !isSingleFamilyHome ? (
+        <CommercialAlert />
       ) : (
-        <p>No schedules have been found for this property.</p>
+        <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
+
       {pdfLink && (
         <>
           <h3>Download</h3>
