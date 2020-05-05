@@ -63,12 +63,14 @@ const FindScheduleForm = () => {
     submitEvent.preventDefault();
     const addressQuery = document.getElementById("address-lookup").value;
 
-    const suggestions = await GetSuggestions(addressQuery);
+    if (addressQuery) {
+      const suggestions = await GetSuggestions(addressQuery);
 
-    setSuggestions({
-      suggestions,
-      status: suggestions && suggestions.length > 0 ? "success" : "error",
-    });
+      setSuggestions({
+        suggestions,
+        status: suggestions && suggestions.length > 0 ? "success" : "error",
+      });
+    }
   };
 
   if ([status, suggestionStatus].some((x) => x === "error")) {
@@ -93,7 +95,6 @@ const FindScheduleForm = () => {
           onConfirm={handleValueSelect}
           minLength={3}
         />
-        <button type="submit">Submit</button>
       </form>
       {suggestions && suggestions.length > 0 && (
         <Suggestions suggestions={suggestions} />
