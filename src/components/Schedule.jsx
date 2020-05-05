@@ -2,7 +2,7 @@ import CommercialAlert from "./CommercialAlert";
 import InActiveRouteAlert from "./InActiveRouteAlert";
 import React from "react";
 import ScheduleTable from "./ScheduleTable";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "../common/Fetch";
