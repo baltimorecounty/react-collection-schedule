@@ -1,14 +1,15 @@
-import { Redirect, useParams } from "react-router-dom";
 import React, { useState } from "react";
+import { Redirect, useParams } from "react-router-dom";
+
+import AddressNotFoundAlert from "./AddressNotFoundAlert";
+import Autocomplete from "./Autocomplete";
+import { Config } from "@baltimorecounty/javascript-utilities";
+import Fetch from "../common/Fetch";
+import { GetSuggestions } from "../common/Suggestions";
+import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
+import Suggestions from "./Suggestions";
 import { useQuery } from "react-query";
 
-import Autocomplete from "./Autocomplete";
-import Fetch from "../common/Fetch";
-import AddressNotFoundAlert from "./AddressNotFoundAlert";
-import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
-import { GetSuggestions } from "../common/Suggestions";
-import Suggestions from "./Suggestions";
-import { Config } from "@baltimorecounty/javascript-utilities";
 const { getValue } = Config;
 
 const FindScheduleForm = () => {
@@ -38,7 +39,12 @@ const FindScheduleForm = () => {
   const { candidates = [] } = addressCandidates || {};
   const hasAddressCandidates = candidates.length > 0;
 
-  const suggest = async (query, populateResults) => {
+  /**
+   * Populate AutoComplete Results
+   * @param {string} query
+   * @param {function} populateResults
+   */
+  const handleSuggestLookup = async (query, populateResults) => {
     setSuggestions({});
     try {
       const suggestions = await GetSuggestions(query);
@@ -51,7 +57,7 @@ const FindScheduleForm = () => {
     }
   };
 
-  const handleValueSelect = (selectedValue) => {
+  const handleAutocompleteSelection = (selectedValue) => {
     setSuggestion({
       suggestion: selectedValue,
       status: "success",
@@ -91,8 +97,8 @@ const FindScheduleForm = () => {
         <Autocomplete
           id="address-lookup"
           label="Find Your Collection Schedule"
-          suggest={suggest}
-          onConfirm={handleValueSelect}
+          suggest={handleSuggestLookup}
+          onConfirm={handleAutocompleteSelection}
           minLength={3}
         />
       </form>
