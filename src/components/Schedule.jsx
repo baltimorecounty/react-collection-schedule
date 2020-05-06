@@ -1,24 +1,49 @@
 import CommercialAlert from "./CommercialAlert";
-import InActiveRouteAlert from "./InActiveRouteAlert";
-import PropTypes from "prop-types";
+import AddressNotFoundAlert from "./AddressNotFoundAlert";
 import React from "react";
 import ScheduleTable from "./ScheduleTable";
+import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Config } from "@baltimorecounty/javascript-utilities";
+import Fetch from "../common/Fetch";
+import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
+import { FormatAddress } from "../common/Formatters";
+import WrongAddressMessage from "./WrongAddressMessage";
 
-const Schedule = ({ schedule = {} }) => {
+const { getValue } = Config;
+
+const Schedule = () => {
+  const { address } = useParams();
+  const { data, status } = useQuery(
+    address && [
+      "getSchedule",
+      {
+        endpoint: getValue("collectionSchedule"),
+        path: `${address}`,
+      },
+    ],
+    Fetch,
+    {
+      refetchOnWindowFocus: false,
+      retries: false,
+    }
+  );
+
+  if (!data) {
+    return <p>Loading collection schedule for {FormatAddress(address)}...</p>;
+  }
+
+  if (status === "error") {
+    return <SomethingWentWrongAlert />;
+  }
+
   const {
     collectionSchedules = [],
     isSingleFamilyHome,
     isActiveRoute,
     pdfLink,
-  } = schedule;
-
-  if (!isActiveRoute) {
-    return <InActiveRouteAlert />;
-  }
-
-  if (!isSingleFamilyHome) {
-    return <CommercialAlert />;
-  }
+    status: httpStatus,
+  } = data;
 
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
@@ -26,11 +51,20 @@ const Schedule = ({ schedule = {} }) => {
 
   return (
     <div>
-      {hasAtLeastOneSchedule ? (
-        <ScheduleTable collectionSchedules={collectionSchedules} />
+      <div className="results">
+        <h3>Your Schedule</h3>
+        <p>Showing results for:</p>
+        <p className="font-weight-bold">{FormatAddress(address)}</p>
+        <WrongAddressMessage />
+      </div>
+      {!isActiveRoute || httpStatus === 404 || !hasAtLeastOneSchedule ? (
+        <AddressNotFoundAlert />
+      ) : !isSingleFamilyHome ? (
+        <CommercialAlert />
       ) : (
-        <p>No schedules have been found for this property.</p>
+        <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
+
       {pdfLink && (
         <>
           <h3>Download</h3>
@@ -41,11 +75,6 @@ const Schedule = ({ schedule = {} }) => {
       )}
     </div>
   );
-};
-
-Schedule.propTypes = {
-  /** Schedule Data */
-  schedule: PropTypes.object.isRequired,
 };
 
 export default Schedule;
