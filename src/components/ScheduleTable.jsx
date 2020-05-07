@@ -40,7 +40,7 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
                 className={`fa-fw d-sm-none d-none d-md-inline ${getIconClass(
                   name
                 )} fa-2x`}
-                style={{ marginRight: "10px" }}
+                style={{ marginRight: "15px" }}
                 aria-hidden="true"
               ></i>
               {name}
