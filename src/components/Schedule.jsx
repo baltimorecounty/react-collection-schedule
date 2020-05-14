@@ -1,19 +1,28 @@
-import CommercialAlert from "./CommercialAlert";
+import { useLocation, useParams } from "react-router-dom";
+
 import AddressNotFoundAlert from "./AddressNotFoundAlert";
-import React from "react";
-import ScheduleTable from "./ScheduleTable";
-import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import CommercialAlert from "./CommercialAlert";
 import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "../common/Fetch";
-import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import { FormatAddress } from "../common/Formatters";
+import React from "react";
+import ScheduleTable from "./ScheduleTable";
+import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import WrongAddressMessage from "./WrongAddressMessage";
+import { useQuery } from "react-query";
 
 const { getValue } = Config;
 
+// A custom hook that builds on useLocation to parse
+// the query string for you.
+function useQueryParams() {
+  const params = new URLSearchParams(useLocation().search);
+  return { error: parseInt(params.get("error")) };
+}
+
 const Schedule = () => {
   const { address } = useParams();
+  const { error: errorFromQueryParams = 0 } = useQueryParams();
   const { data, status } = useQuery(
     address && [
       "getSchedule",
@@ -33,7 +42,7 @@ const Schedule = () => {
     return <p>Loading collection schedule for {FormatAddress(address)}...</p>;
   }
 
-  if (status === "error") {
+  if (status === "error" || errorFromQueryParams === 500) {
     return <SomethingWentWrongAlert />;
   }
 
@@ -57,7 +66,10 @@ const Schedule = () => {
         <p className="font-weight-bold">{FormatAddress(address)}</p>
         <WrongAddressMessage />
       </div>
-      {!isActiveRoute || httpStatus === 404 || !hasAtLeastOneSchedule ? (
+      {!isActiveRoute ||
+      httpStatus === 404 ||
+      errorFromQueryParams === 404 ||
+      !hasAtLeastOneSchedule ? (
         <AddressNotFoundAlert />
       ) : !isSingleFamilyHome ? (
         <CommercialAlert />
