@@ -62,7 +62,7 @@ const Schedule = () => {
     <div>
       <div className="results">
         <h3>Your Schedule</h3>
-        <p>Showing results for:</p>
+        <p>You searched for:</p>
         <p className="font-weight-bold">{FormatAddress(address)}</p>
         <WrongAddressMessage />
       </div>
@@ -80,9 +80,12 @@ const Schedule = () => {
       {pdfLink && (
         <>
           <h3>Download</h3>
-          <a href={pdfLink} rel="noopener noreferrer" target="_blank">
-            Download your complete four-year collection schedule.
-          </a>
+          <p>
+            <a href={pdfLink} rel="noopener noreferrer" target="_blank">
+              Download your complete four-year collection schedule
+            </a>{" "}
+            (PDF).
+          </p>
         </>
       )}
     </div>
