@@ -14,7 +14,7 @@ const CommercialAlert = () => (
       schedule.
     </p>
     <p>
-      Please contact you property manager for collection details at this
+      Please contact your property manager for collection details at this
       location.
     </p>
   </Alert>

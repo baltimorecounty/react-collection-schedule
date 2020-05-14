@@ -8,10 +8,14 @@ const AddressNotFoundAlert = () => (
     icon="far fa-exclamation-triangle"
     status="Invalid Address"
   >
-    <p>The address provided does not match our records.</p>
+    <p>
+      A collection schedule isn't available at this time for the address
+      provided.
+    </p>
     <p>
       If the address is correct, please contact Customer Service at
-      410-887-2000. They can be reached Monday - Friday from 7:30 a.m. - 4 p.m.
+      410-887-2000. They can be reached Monday through Friday from 7:30 a.m. to
+      4 p.m.
     </p>
   </Alert>
 );
