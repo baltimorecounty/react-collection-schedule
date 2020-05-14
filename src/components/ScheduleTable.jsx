@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableBody,
@@ -7,6 +6,8 @@ import {
   TableHeadCell,
   TableRow,
 } from "@baltimorecounty/dotgov-components";
+
+import React from "react";
 
 const getIconClass = (name) => {
   switch (name.toLowerCase()) {
@@ -36,10 +37,10 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
           <TableRow key={name}>
             <TableCell style={{ verticalAlign: "middle" }}>
               <i
-                className={`d-sm-none d-none d-md-inline ${getIconClass(
+                className={`fa-fw d-sm-none d-none d-md-inline ${getIconClass(
                   name
                 )} fa-2x`}
-                style={{ marginRight: "10px" }}
+                style={{ marginRight: "15px" }}
                 aria-hidden="true"
               ></i>
               {name}
