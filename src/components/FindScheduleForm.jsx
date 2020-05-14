@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { Redirect, useParams } from "react-router-dom";
 
-import AddressNotFoundAlert from "./AddressNotFoundAlert";
 import Autocomplete from "./Autocomplete";
 import { Config } from "@baltimorecounty/javascript-utilities";
 import Fetch from "../common/Fetch";
 import { GetSuggestions } from "../common/Suggestions";
-import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import Suggestions from "./Suggestions";
 import { useQuery } from "react-query";
 
@@ -65,9 +63,12 @@ const FindScheduleForm = () => {
     setSuggestions({});
   };
 
+  /** Get Address Lookup Input Value */
+  const getInputValue = () => document.getElementById("address-lookup").value;
+
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
-    const addressQuery = document.getElementById("address-lookup").value;
+    const addressQuery = getInputValue();
 
     if (addressQuery) {
       const suggestions = await GetSuggestions(addressQuery);
@@ -79,12 +80,21 @@ const FindScheduleForm = () => {
     }
   };
 
+  /**
+   * Redirect when the form encounters an error to schedule
+   * This ensures a consistent experience
+   * @param {number} errorCode http status code that describes the problem
+   */
+  const redirectOnError = (errorCode) => (
+    <Redirect to={`/schedule/${getInputValue()}?error=${errorCode}`} />
+  );
+
   if ([status, suggestionStatus].some((x) => x === "error")) {
-    return <SomethingWentWrongAlert />;
+    return redirectOnError(500);
   }
 
   if (suggestionsStatus === "error") {
-    return <AddressNotFoundAlert />;
+    return redirectOnError(404);
   }
 
   if (hasAddressCandidates) {
