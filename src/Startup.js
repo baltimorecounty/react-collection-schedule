@@ -28,9 +28,9 @@ const buildApiUrls = (endpoint) => {
 
 const urls = {
   collectionSchedule: buildApiUrls("api/hub/collectionSchedule/schedule"),
-  suggest: buildApiUrls("api/hub/gis/Geocoder/suggest"),
+  suggest: buildApiUrls("api/hub/gisProxy/Geocoder/suggest"),
   findAddressCandidates: buildApiUrls(
-    "api/hub/gis/Geocoder/findAddressCandidates"
+    "api/hub/gisProxy/Geocoder/findAddressCandidates"
   ),
 };
 
