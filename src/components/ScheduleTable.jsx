@@ -48,7 +48,7 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
             <TableCell>
               {collectionDays.length > 0
                 ? collectionDays.join(",")
-                : "No collection days specified for this type."}
+                : "collected with trash"}
             </TableCell>
             <TableCell>
               {nextCollectionDate
