@@ -77,7 +77,6 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
-
       {pdfLink && (
         <>
           <h3>YOUR FOUR YEAR SCHEDULE</h3>
