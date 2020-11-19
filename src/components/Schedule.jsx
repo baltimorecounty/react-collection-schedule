@@ -79,7 +79,7 @@ const Schedule = () => {
       )}
       {pdfLink && (
         <>
-          <h3>YOUR FOUR YEAR SCHEDULEddd</h3>
+          <h3>YOUR FOUR YEAR SCHEDULE</h3>
           <p>Find your complete trash, recycle and yard materials collections schedule through {throughDate()}.</p>
           <p>
             <a
