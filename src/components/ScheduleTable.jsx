@@ -15,7 +15,7 @@ const getIconClass = (name) => {
       return "far fa-trash-alt";
     case "recycling":
       return "far fa-recycle";
-    case "yard waste":
+    case "yard materials":
       return "far fa-leaf";
     default:
       return "";
