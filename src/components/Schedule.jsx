@@ -28,13 +28,13 @@ const Schedule = () => {
       "getSchedule",
       {
         endpoint: getValue("collectionSchedule"),
-        path: `${address}`,
-      },
+        path: `${address}`
+      }
     ],
     Fetch,
     {
       refetchOnWindowFocus: false,
-      retries: false,
+      retries: false
     }
   );
 
@@ -51,17 +51,18 @@ const Schedule = () => {
     isSingleFamilyHome,
     isActiveRoute,
     pdfLink,
-    status: httpStatus,
+    status: httpStatus
   } = data;
 
   const hasAtLeastOneSchedule = collectionSchedules.some(
-    (schedule) => schedule.nextCollectionDate
+    schedule => schedule.nextCollectionDate
   );
+  const throughDate=()=> new Date().getFullYear() + 1;
 
   return (
     <div>
       <div className="results">
-        <h3>Your Schedule</h3>
+        <h3>Your Current Schedule</h3>
         <p>You searched for:</p>
         <p className="font-weight-bold">{FormatAddress(address)}</p>
         <WrongAddressMessage />
@@ -76,15 +77,19 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
-
       {pdfLink && (
         <>
-          <h3>Download</h3>
+          <h3>YOUR FOUR YEAR SCHEDULE</h3>
+          <p>Find your complete trash, recycle and yard materials collections schedule through {throughDate()}.</p>
           <p>
-            <a href={pdfLink} rel="noopener noreferrer" target="_blank">
-              Download your complete four-year collection schedule
-            </a>{" "}
-            (PDF).
+            <a
+              class="dg_button"
+              href={pdfLink}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Download my schedule
+            </a>
           </p>
         </>
       )}
