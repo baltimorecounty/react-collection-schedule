@@ -13,7 +13,7 @@ const prodHost = "https://services.baltimorecountymd.gov";
 const buildApiUrls = (endpoint) => {
   const hosts = {
     local: localHost,
-    development: localHost,
+    development: testHost,
     staging: testHost,
     production: prodHost,
   };
