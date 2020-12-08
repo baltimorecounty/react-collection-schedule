@@ -4,12 +4,12 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
+  TableRow
 } from "@baltimorecounty/dotgov-components";
 
 import React from "react";
 
-const getIconClass = (name) => {
+const getIconClass = name => {
   switch (name.toLowerCase()) {
     case "trash":
       return "far fa-trash-alt";
@@ -33,7 +33,10 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
     </TableHead>
     <TableBody>
       {collectionSchedules.map(
-        ({ name, collectionDays, nextCollectionDate }, index) => (
+        (
+          { name, collectionDays, isCurrentlyActive, nextCollectionDate },
+          index
+        ) => (
           <TableRow key={name}>
             <TableCell style={{ verticalAlign: "middle" }}>
               <i
@@ -46,12 +49,12 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
               {name}
             </TableCell>
             <TableCell>
-              {collectionDays.length > 0
+              {isCurrentlyActive
                 ? collectionDays.join(",")
                 : "collected with trash"}
             </TableCell>
             <TableCell>
-              {nextCollectionDate
+              {isCurrentlyActive
                 ? new Date(nextCollectionDate).toLocaleDateString()
                 : "n / a"}
             </TableCell>
