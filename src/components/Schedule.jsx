@@ -72,20 +72,10 @@ const Schedule = () => {
           <strong>Next Collection:</strong> April {throughDate()}{" "}
         </p>
       </Alert>
-      // <div>
-      //   <p>
-      //     <strong>Type:</strong> Yard Materials (every other week, from April
-      //     through mid-December)
-      //   </p>
-      //   <p>
-      //     <strong>Collection Occurs:</strong> Wednesday (collected with trash until April of{" "}
-      //     {throughDate()}{" "}
-      //   </p>
-      // </div>
+  
     );
   };
-  console.log(collectionSchedules.length);
-  console.log(collectionSchedules);
+
   const throughDate = () => new Date().getFullYear() + 1;
   var isActiveFlag =
     collectionSchedules !== "undefined"
