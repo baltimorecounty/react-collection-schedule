@@ -64,8 +64,8 @@ const Schedule = () => {
           <strong>Type:</strong> Yard Materials
         </p>
         <p>
-          <strong>Collection Occurs:</strong> Every other week on Wednesday,
-          from April through mid-December
+          <strong>Collection Occurs:</strong> Every other week, from April
+          through mid-December
         </p>
         <p>
           <strong>Next Collection:</strong> April {throughDate()}
