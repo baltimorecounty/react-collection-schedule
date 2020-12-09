@@ -57,8 +57,13 @@ const Schedule = () => {
   const hasAtLeastOneSchedule = collectionSchedules.some(
     schedule => schedule.nextCollectionDate
   );
+  const displayMessage=()=>{
+    return  <p><h3>Type:</h3>Yard Materials (every other week, from April through mid-December)
+           <h3>Collection Occurs: </h3>Wednesday (collected with trash until April of  {throughDate()} </p>; 
+    
+  };
   const throughDate=()=> new Date().getFullYear() + 1;
-
+var isActiveFlag = collectionSchedules !=='undefined'?collectionSchedules[2].isCurrentlyActive:true;
   return (
     <div>
       <div className="results">
@@ -77,7 +82,11 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
-      {pdfLink && (
+      {!isActiveFlag ? displayMessage() : ""}
+    
+
+      {
+        pdfLink && (
         <>
           <h3>YOUR FOUR YEAR SCHEDULE</h3>
           <p>Find your complete trash, recycle and yard materials collections schedule through {throughDate()}.</p>
