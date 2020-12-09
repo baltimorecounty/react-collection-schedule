@@ -4,12 +4,12 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow
+  TableRow,
 } from "@baltimorecounty/dotgov-components";
 
 import React from "react";
 
-const getIconClass = name => {
+const getIconClass = (name) => {
   switch (name.toLowerCase()) {
     case "trash":
       return "far fa-trash-alt";
