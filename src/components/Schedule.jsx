@@ -1,5 +1,5 @@
 import { useLocation, useParams } from "react-router-dom";
-
+import { Alert } from "@baltimorecounty/dotgov-components";
 import AddressNotFoundAlert from "./AddressNotFoundAlert";
 import CommercialAlert from "./CommercialAlert";
 import { Config } from "@baltimorecounty/javascript-utilities";
@@ -28,13 +28,13 @@ const Schedule = () => {
       "getSchedule",
       {
         endpoint: getValue("collectionSchedule"),
-        path: `${address}`
-      }
+        path: `${address}`,
+      },
     ],
     Fetch,
     {
       refetchOnWindowFocus: false,
-      retries: false
+      retries: false,
     }
   );
 
@@ -51,14 +51,36 @@ const Schedule = () => {
     isSingleFamilyHome,
     isActiveRoute,
     pdfLink,
-    status: httpStatus
+    status: httpStatus,
   } = data;
 
   const hasAtLeastOneSchedule = collectionSchedules.some(
-    schedule => schedule.nextCollectionDate
+    (schedule) => schedule.nextCollectionDate
   );
-  const throughDate=()=> new Date().getFullYear() + 1;
+  const displayMessage = () => {
+    return (
+      <Alert className="status" type="information" icon="far fa-info-circle">
+        <p>
+          <strong>Type:</strong> Yard Materials (every other week, from April
+          through mid-December)
+        </p>
+        <p>
+          <strong>Collection Occurs:</strong> Wednesday (collected with trash
+          until April of {throughDate()})
+        </p>
+        <p>
+          <strong>Next Collection:</strong> April {throughDate()}{" "}
+        </p>
+      </Alert>
+  
+    );
+  };
 
+  const throughDate = () => new Date().getFullYear() + 1;
+  var isActiveFlag =
+    collectionSchedules !== "undefined"
+      ? collectionSchedules[2].isCurrentlyActive
+      : true;
   return (
     <div>
       <div className="results">
@@ -77,13 +99,20 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
+      {!isActiveFlag && collectionSchedules[2].nextCollectionDate != null
+        ? displayMessage()
+        : ""}
+
       {pdfLink && (
         <>
           <h3>YOUR FOUR YEAR SCHEDULE</h3>
-          <p>Find your complete trash, recycle and yard materials collections schedule through {throughDate()}.</p>
+          <p>
+            Find your complete trash, recycle and yard materials collections
+            schedule through {throughDate()}.
+          </p>
           <p>
             <a
-              class="dg_button"
+              className="dg_button"
               href={pdfLink}
               rel="noopener noreferrer"
               target="_blank"

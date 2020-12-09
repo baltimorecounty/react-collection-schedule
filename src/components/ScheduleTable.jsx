@@ -4,12 +4,12 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow
+  TableRow,
 } from "@baltimorecounty/dotgov-components";
 
 import React from "react";
 
-const getIconClass = name => {
+const getIconClass = (name) => {
   switch (name.toLowerCase()) {
     case "trash":
       return "far fa-trash-alt";
@@ -51,7 +51,7 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
             <TableCell>
               {isCurrentlyActive
                 ? collectionDays.join(",")
-                : "collected with trash"}
+                : "Collected with trash"}
             </TableCell>
             <TableCell>
               {isCurrentlyActive
