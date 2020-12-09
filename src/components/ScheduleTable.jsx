@@ -51,7 +51,7 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
             <TableCell>
               {isCurrentlyActive
                 ? collectionDays.join(",")
-                : "collected with trash"}
+                : "Collected with trash"}
             </TableCell>
             <TableCell>
               {isCurrentlyActive

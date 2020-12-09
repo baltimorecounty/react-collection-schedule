@@ -66,7 +66,7 @@ const Schedule = () => {
         </p>
         <p>
           <strong>Collection Occurs:</strong> Wednesday (collected with trash
-          until April of {throughDate()} )
+          until April of {throughDate()})
         </p>
         <p>
           <strong>Next Collection:</strong> April {throughDate()}{" "}
@@ -84,6 +84,8 @@ const Schedule = () => {
       // </div>
     );
   };
+  console.log(collectionSchedules.length);
+  console.log(collectionSchedules);
   const throughDate = () => new Date().getFullYear() + 1;
   var isActiveFlag =
     collectionSchedules !== "undefined"
@@ -107,7 +109,9 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
-      {!isActiveFlag ? displayMessage() : ""}
+      {!isActiveFlag && collectionSchedules[2].nextCollectionDate != null
+        ? displayMessage()
+        : ""}
 
       {pdfLink && (
         <>
@@ -118,7 +122,7 @@ const Schedule = () => {
           </p>
           <p>
             <a
-              class="dg_button"
+              className="dg_button"
               href={pdfLink}
               rel="noopener noreferrer"
               target="_blank"
