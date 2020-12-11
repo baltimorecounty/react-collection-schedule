@@ -61,14 +61,8 @@ const Schedule = () => {
     return (
       <Alert className="status" type="information" icon="far fa-info-circle">
         <p>
-          <strong>Type:</strong> Yard Materials
-        </p>
-        <p>
-          <strong>Collection Occurs:</strong> Every other week, from April
-          through mid-December
-        </p>
-        <p>
-          <strong>Next Collection:</strong> April {throughDate()}
+          Separate yard materials collection occurs every other week, from April
+          through mid-December.
         </p>
       </Alert>
     );

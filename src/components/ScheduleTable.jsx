@@ -51,10 +51,14 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
             <TableCell>
               {isCurrentlyActive
                 ? collectionDays.join(",")
+                : !isCurrentlyActive && nextCollectionDate != null
+                ? "Collected with trash until"
                 : "Collected with trash"}
             </TableCell>
             <TableCell>
               {isCurrentlyActive
+                ? new Date(nextCollectionDate).toLocaleDateString()
+                : !isCurrentlyActive && nextCollectionDate != null
                 ? new Date(nextCollectionDate).toLocaleDateString()
                 : "n / a"}
             </TableCell>
