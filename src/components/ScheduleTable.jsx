@@ -34,7 +34,12 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
     <TableBody>
       {collectionSchedules.map(
         (
-          { name, collectionDays, isCurrentlyActive, nextCollectionDate },
+          {
+            name,
+            collectionDays,
+            isCurrentlyActive = true,
+            nextCollectionDate,
+          },
           index
         ) => (
           <TableRow key={name}>

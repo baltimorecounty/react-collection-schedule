@@ -69,10 +69,16 @@ const Schedule = () => {
   };
 
   const throughDate = () => new Date().getFullYear() + 1;
-  var isActiveFlag =
-    collectionSchedules !== "undefined"
-      ? collectionSchedules[2].isCurrentlyActive
-      : true;
+
+  const isYardWasteActiveFlag = () => {
+    const isActiveFlag =
+      collectionSchedules.length > 0
+        ? collectionSchedules[2].isCurrentlyActive
+        : true;
+
+    return isActiveFlag;
+  };
+
   return (
     <div>
       <div className="results">
@@ -91,7 +97,8 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
-      {!isActiveFlag && collectionSchedules[2].nextCollectionDate != null
+      {!isYardWasteActiveFlag() &&
+      collectionSchedules[2].nextCollectionDate != null
         ? displayMessage()
         : ""}
 
