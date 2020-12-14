@@ -61,26 +61,24 @@ const Schedule = () => {
     return (
       <Alert className="status" type="information" icon="far fa-info-circle">
         <p>
-          <strong>Type:</strong> Yard Materials (every other week, from April
-          through mid-December)
-        </p>
-        <p>
-          <strong>Collection Occurs:</strong> Wednesday (collected with trash
-          until April of {throughDate()})
-        </p>
-        <p>
-          <strong>Next Collection:</strong> April {throughDate()}{" "}
+          Separate yard materials collection occurs every other week, from April
+          through mid-December.
         </p>
       </Alert>
-  
     );
   };
 
   const throughDate = () => new Date().getFullYear() + 1;
-  var isActiveFlag =
-    collectionSchedules !== "undefined"
-      ? collectionSchedules[2].isCurrentlyActive
-      : true;
+
+  const isYardWasteActiveFlag = () => {
+    const isActiveFlag =
+      collectionSchedules.length > 0
+        ? collectionSchedules[2].isCurrentlyActive
+        : true;
+
+    return isActiveFlag;
+  };
+
   return (
     <div>
       <div className="results">
@@ -99,7 +97,8 @@ const Schedule = () => {
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
       )}
-      {!isActiveFlag && collectionSchedules[2].nextCollectionDate != null
+      {!isYardWasteActiveFlag() &&
+      collectionSchedules[2].nextCollectionDate != null
         ? displayMessage()
         : ""}
 
