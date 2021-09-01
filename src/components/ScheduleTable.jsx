@@ -22,12 +22,19 @@ const getIconClass = (name) => {
   }
 };
 
+var options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
 const ScheduleTable = ({ collectionSchedules = [] }) => (
   <Table className="table-fixed">
     <TableHead>
       <TableRow>
         <TableHeadCell>Type</TableHeadCell>
-        <TableHeadCell>Collection Occurs</TableHeadCell>
+        {/* <TableHeadCell>Collection Occurs</TableHeadCell> */}
         <TableHeadCell>Next Collection</TableHeadCell>
       </TableRow>
     </TableHead>
@@ -53,18 +60,24 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
               ></i>
               {name}
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               {isCurrentlyActive
                 ? collectionDays.join(",")
                 : !isCurrentlyActive && nextCollectionDate != null
                 ? "Collected with trash until"
                 : "Collected with trash"}
-            </TableCell>
+            </TableCell> */}
             <TableCell>
               {isCurrentlyActive
-                ? new Date(nextCollectionDate).toLocaleDateString()
+                ? new Date(nextCollectionDate).toLocaleDateString(
+                    "en-US",
+                    options
+                  )
                 : !isCurrentlyActive && nextCollectionDate != null
-                ? new Date(nextCollectionDate).toLocaleDateString()
+                ? new Date(nextCollectionDate).toLocaleDateString(
+                    "en-US",
+                    options
+                  )
                 : "n / a"}
             </TableCell>
           </TableRow>
