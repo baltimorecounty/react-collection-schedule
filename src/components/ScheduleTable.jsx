@@ -55,7 +55,9 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
             </TableCell>
             <TableCell>
               {isCurrentlyActive
-                ? collectionDays.join(",")
+                ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
+                    weekday: "long",
+                  })
                 : !isCurrentlyActive && nextCollectionDate != null
                 ? "Collected with trash until"
                 : "Collected with trash"}
