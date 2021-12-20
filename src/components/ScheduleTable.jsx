@@ -10,6 +10,7 @@ import {
 import React from "react";
 
 const getIconClass = (name) => {
+  console.log(name);
   switch (name.toLowerCase()) {
     case "trash":
       return "far fa-trash-alt";
@@ -17,12 +18,13 @@ const getIconClass = (name) => {
       return "far fa-recycle";
     case "yard materials":
       return "far fa-leaf";
-    case "bulk trash":
+    case "bulk pickup":
       return "fas fa-dumpster";
     default:
       return "";
   }
 };
+
 
 const ScheduleTable = ({ collectionSchedules = [] }) => (
   <Table className="table-fixed">
