@@ -10,7 +10,6 @@ import {
 import React from "react";
 
 const getIconClass = (name) => {
-  console.log(name);
   switch (name.toLowerCase()) {
     case "trash":
       return "far fa-trash-alt";
@@ -19,12 +18,39 @@ const getIconClass = (name) => {
     case "yard materials":
       return "far fa-leaf";
     case "bulk pickup":
-      return "fas fa-dumpster";
+      return "far fa-dumpster";
     default:
       return "";
   }
 };
 
+const GetDateRowText = (name, nextCollectionDate, isCurrentlyActive) => {
+  return name === "Bulk Pickup" && nextCollectionDate === ""
+    ? "There are no more bulk pickups for this year"
+    : isCurrentlyActive
+    ? new Date(nextCollectionDate).toLocaleDateString()
+    : !isCurrentlyActive && nextCollectionDate != null
+    ? new Date(nextCollectionDate).toLocaleDateString()
+    : name === "bulk pickup" && nextCollectionDate === ""
+    ? "There are no more bulk pickups for this year"
+    : "n / a";
+};
+
+const GetDayOfWeekRowText = (name, nextCollectionDate, isCurrentlyActive) => {
+  return name === "Bulk Pickup"
+    ? nextCollectionDate !== ""
+      ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
+          weekday: "long",
+        })
+      : "n/a"
+    : isCurrentlyActive
+    ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
+        weekday: "long",
+      })
+    : !isCurrentlyActive && nextCollectionDate != null
+    ? "Collected with trash until"
+    : "Collected with trash";
+};
 
 const ScheduleTable = ({ collectionSchedules = [] }) => (
   <Table className="table-fixed">
@@ -58,20 +84,10 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
               {name}
             </TableCell>
             <TableCell>
-              {isCurrentlyActive
-                ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
-                    weekday: "long",
-                  })
-                : !isCurrentlyActive && nextCollectionDate != null
-                ? "Collected with trash until"
-                : "Collected with trash"}
+              {GetDayOfWeekRowText(name, nextCollectionDate, isCurrentlyActive)}
             </TableCell>
             <TableCell>
-              {isCurrentlyActive
-                ? new Date(nextCollectionDate).toLocaleDateString()
-                : !isCurrentlyActive && nextCollectionDate != null
-                ? new Date(nextCollectionDate).toLocaleDateString()
-                : "n / a"}
+              {GetDateRowText(name, nextCollectionDate, isCurrentlyActive)}
             </TableCell>
           </TableRow>
         )
