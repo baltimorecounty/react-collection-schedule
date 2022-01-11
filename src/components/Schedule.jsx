@@ -17,18 +17,22 @@ const { getValue } = Config;
 // the query string for you.
 function useQueryParams() {
   const params = new URLSearchParams(useLocation().search);
+
   return { error: parseInt(params.get("error")) };
 }
 
 const Schedule = () => {
   const { address } = useParams();
+
+  const zipcode = address.split(",")[1];
+
   const { error: errorFromQueryParams = 0 } = useQueryParams();
   const { data, status } = useQuery(
     address && [
       "getSchedule",
       {
         endpoint: getValue("collectionSchedule"),
-        path: `${address}`,
+        path: `${address.split(",")[0]},${zipcode}`,
       },
     ],
     Fetch,
@@ -84,7 +88,9 @@ const Schedule = () => {
       <div className="results">
         <h3>Your Current Schedule</h3>
         <p>You searched for:</p>
-        <p className="font-weight-bold">{FormatAddress(address)}</p>
+        <p className="font-weight-bold">
+          {FormatAddress(address.split(",")[0])}
+        </p>
         <WrongAddressMessage />
       </div>
       {!isActiveRoute ||

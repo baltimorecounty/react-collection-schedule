@@ -15,6 +15,7 @@ const FindScheduleForm = () => {
   const [{ suggestion, status: suggestionStatus }, setSuggestion] = useState({
     suggestion: urlSuggestion,
   });
+
   const [{ suggestions, status: suggestionsStatus }, setSuggestions] = useState(
     {
       suggestions: [],
@@ -33,7 +34,7 @@ const FindScheduleForm = () => {
       refetchOnWindowFocus: false,
     }
   );
-
+  console.log(suggestion);
   const { candidates = [] } = addressCandidates || {};
   const hasAddressCandidates = candidates.length > 0;
 
@@ -99,7 +100,14 @@ const FindScheduleForm = () => {
 
   if (hasAddressCandidates) {
     /** We are using placename here, because the api that return only accepts a partial address. */
-    return <Redirect to={`/schedule/${candidates[0].attributes.placeName}`} />;
+
+    const address = candidates[0].attributes.placeName;
+    const zipcode = candidates[0].attributes.match_Addr.split(",")[3].trim();
+
+    console.log(address);
+    console.log(zipcode);
+
+    return <Redirect to={`/schedule/${address}, ${zipcode}`} />;
   }
 
   return (
