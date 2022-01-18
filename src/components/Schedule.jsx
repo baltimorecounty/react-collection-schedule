@@ -72,7 +72,7 @@ const Schedule = () => {
     );
   };
 
-  const throughDate = () => new Date().getFullYear() + 1;
+  const currentYear = () => new Date().getFullYear();
 
   const isYardWasteActiveFlag = () => {
     const isActiveFlag =
@@ -110,10 +110,10 @@ const Schedule = () => {
 
       {pdfLink && (
         <>
-          <h3>YOUR FOUR YEAR SCHEDULE</h3>
+          <h3>YOUR YEARLY SCHEDULE</h3>
           <p>
-            Find your complete trash, recycle and yard materials collections
-            schedule through {throughDate()}.
+            Find your complete trash, recycling and yard materials collections
+            schedule for {currentYear()}.
           </p>
           <p>
             <a
