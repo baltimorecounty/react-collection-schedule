@@ -34,7 +34,7 @@ const FindScheduleForm = () => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log(suggestion);
+  
   const { candidates = [] } = addressCandidates || {};
   const hasAddressCandidates = candidates.length > 0;
 
@@ -103,9 +103,6 @@ const FindScheduleForm = () => {
 
     const address = candidates[0].attributes.placeName;
     const zipcode = candidates[0].attributes.match_Addr.split(",")[3].trim();
-
-    console.log(address);
-    console.log(zipcode);
 
     return <Redirect to={`/schedule/${address}, ${zipcode}`} />;
   }
