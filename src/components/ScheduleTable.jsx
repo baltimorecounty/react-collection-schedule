@@ -8,32 +8,61 @@ import {
 } from "@baltimorecounty/dotgov-components";
 
 import React from "react";
+import { scrollSmoothTo } from "../common/ScrollToAnchor";
 
-const getIconClass = (name) => {
+const getNameSpecificValues = (name) => {
   switch (name.toLowerCase()) {
     case "trash":
-      return "far fa-trash-alt";
+      return { icon: "far fa-trash-alt", frequency: "Weekly" };
     case "recycling":
-      return "far fa-recycle";
+      return { icon: "far fa-recycle", frequency: "Weekly" };
     case "yard materials":
-      return "far fa-leaf";
+      return { icon: "far fa-leaf", frequency: "Seasonal Bi-Weekly" };
     case "bulk pickup":
-      return "far fa-dumpster";
+      return { icon: "far fa-dumpster", frequency: "Two Pickups Per Year" };
     default:
       return "";
   }
 };
 
-const GetDateRowText = (name, nextCollectionDate, isCurrentlyActive) => {
-  return name === "Bulk Pickup" && nextCollectionDate === ""
-    ? "There are no more bulk pickups for this year"
-    : isCurrentlyActive
-    ? new Date(nextCollectionDate).toLocaleDateString()
-    : !isCurrentlyActive && nextCollectionDate != null
-    ? new Date(nextCollectionDate).toLocaleDateString()
-    : name === "bulk pickup" && nextCollectionDate === ""
-    ? "There are no more bulk pickups for this year"
-    : "n / a";
+const GetBulkDates = (dates) => {
+  var newDates = dates.split(",");
+  let newDateString = "";
+
+  for (let i = 0; i < newDates.length; i++) {
+    var year = newDates[i].substring(0, 4);
+    var month = newDates[i].substring(4, 6);
+    var day = newDates[i].substring(6, 8);
+
+    var newDate = new Date(year, month - 1, day).toLocaleDateString();
+
+    if (i === newDates.length - 1) {
+      newDateString += newDate;
+    } else {
+      newDateString += newDate + ", ";
+    }
+  }
+
+  return newDateString;
+};
+
+const GetDateRowText = (
+  name,
+  nextCollectionDate,
+  isCurrentlyActive,
+  bulkCollectionDates,
+  yardSchedule
+) => {
+  const scheduleLink = `See Yard <a href="javascript:;" onClick = ${scrollSmoothTo(
+    "#Schedule-" + { yardSchedule }
+  )}>Schedule ${yardSchedule}</a>`;
+
+  console.log(scheduleLink);
+  return name === "Bulk Pickup" ? (
+    GetBulkDates(bulkCollectionDates)
+  ) : name === "Yard Materials" ? (
+    <div dangerouslySetInnerHTML={{ __html: scheduleLink }}></div>
+  ) : null;
 };
 
 const GetDayOfWeekRowText = (name, nextCollectionDate, isCurrentlyActive) => {
@@ -57,8 +86,8 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
     <TableHead>
       <TableRow>
         <TableHeadCell>Type</TableHeadCell>
-        <TableHeadCell>Collection Occurs</TableHeadCell>
-        <TableHeadCell>Next Collection</TableHeadCell>
+        <TableHeadCell>Collection Frequency</TableHeadCell>
+        <TableHeadCell>Next Collection Day</TableHeadCell>
       </TableRow>
     </TableHead>
     <TableBody>
@@ -67,27 +96,40 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
           {
             name,
             collectionDays,
+            yardSchedule,
             isCurrentlyActive = true,
             nextCollectionDate,
+            bulkCollectionDates,
           },
           index
         ) => (
           <TableRow key={name}>
             <TableCell style={{ verticalAlign: "middle" }}>
               <i
-                className={`fa-fw d-sm-none d-none d-md-inline ${getIconClass(
-                  name
-                )} fa-2x`}
+                className={`fa-fw d-sm-none d-none d-md-inline ${
+                  getNameSpecificValues(name).icon
+                } fa-2x`}
                 style={{ marginRight: "15px" }}
                 aria-hidden="true"
               ></i>
               {name}
             </TableCell>
+            <TableCell>{getNameSpecificValues(name).frequency}</TableCell>
             <TableCell>
-              {GetDayOfWeekRowText(name, nextCollectionDate, isCurrentlyActive)}
-            </TableCell>
-            <TableCell>
-              {GetDateRowText(name, nextCollectionDate, isCurrentlyActive)}
+              {name.toLowerCase() === "bulk pickup" ||
+              name.toLowerCase() === "yard materials"
+                ? GetDateRowText(
+                    name,
+                    nextCollectionDate,
+                    isCurrentlyActive,
+                    bulkCollectionDates,
+                    yardSchedule
+                  )
+                : GetDayOfWeekRowText(
+                    name,
+                    nextCollectionDate,
+                    isCurrentlyActive
+                  )}
             </TableCell>
           </TableRow>
         )

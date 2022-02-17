@@ -57,7 +57,7 @@ const Schedule = () => {
     pdfLink,
     status: httpStatus,
   } = data;
-
+  console.log(collectionSchedules);
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
