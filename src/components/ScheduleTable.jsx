@@ -25,6 +25,11 @@ const getNameSpecificValues = (name) => {
   }
 };
 
+const handleOnClick = (e) => {
+  console.log(e);
+  scrollSmoothTo("holiday-schedule");
+};
+
 const GetBulkDates = (dates) => {
   var newDates = dates.split(",");
   let newDateString = "";
@@ -53,11 +58,10 @@ const GetDateRowText = (
   bulkCollectionDates,
   yardSchedule
 ) => {
-  const scheduleLink = `See Yard <a href="javascript:;" onClick = ${scrollSmoothTo(
+  const scheduleLink = `See Yard <a href="javascript:;" onClick = ${handleOnClick(
     "#Schedule-" + { yardSchedule }
   )}>Schedule ${yardSchedule}</a>`;
 
-  console.log(scheduleLink);
   return name === "Bulk Pickup" ? (
     GetBulkDates(bulkCollectionDates)
   ) : name === "Yard Materials" ? (
