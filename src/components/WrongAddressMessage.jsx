@@ -16,7 +16,7 @@ const WrongAddressMessage = (props) => (
     <p>
       The information below reflects your normal assigned collection days. For
       holiday information, view the{" "}
-      <a href={`${hrefVariable}:;`} onClick={handleOnClick}>
+      <a href={`${hrefVariable}:;`} onClick={handleOnClick(this)}>
         holiday collection schedule
       </a>
       .

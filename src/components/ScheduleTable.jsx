@@ -10,14 +10,27 @@ import {
 import React from "react";
 import { scrollSmoothTo } from "../common/ScrollToAnchor";
 
-const getNameSpecificValues = (name) => {
+const scheduleLink = (yardSchedule) => {
+  return `See Yard <a href="#" onClick = ${handleOnClick(
+    "Schedule-" + { yardSchedule }
+  )}>Schedule ${yardSchedule}</a>`;
+};
+
+const getNameSpecificValues = (name, yardSchedule = 0) => {
   switch (name.toLowerCase()) {
     case "trash":
       return { icon: "far fa-trash-alt", frequency: "Weekly" };
     case "recycling":
       return { icon: "far fa-recycle", frequency: "Weekly" };
     case "yard materials":
-      return { icon: "far fa-leaf", frequency: "Seasonal Bi-Weekly" };
+      return {
+        icon: "far fa-leaf",
+        frequency: (
+          <div
+            dangerouslySetInnerHTML={{ __html: scheduleLink(yardSchedule) }}
+          ></div>
+        ),
+      };
     case "bulk pickup":
       return { icon: "far fa-dumpster", frequency: "Two Pickups Per Year" };
     default:
@@ -26,7 +39,6 @@ const getNameSpecificValues = (name) => {
 };
 
 const handleOnClick = (e) => {
-  console.log(e);
   scrollSmoothTo("holiday-schedule");
 };
 
@@ -53,15 +65,12 @@ const GetBulkDates = (dates) => {
 
 const GetDateRowText = (
   name,
+  collectionDays,
   nextCollectionDate,
   isCurrentlyActive,
   bulkCollectionDates,
   yardSchedule
 ) => {
-  const scheduleLink = `See Yard <a href="javascript:;" onClick = ${handleOnClick(
-    "#Schedule-" + { yardSchedule }
-  )}>Schedule ${yardSchedule}</a>`;
-
   return name === "Bulk Pickup" ? (
     GetBulkDates(bulkCollectionDates)
   ) : name === "Yard Materials" ? (
@@ -69,20 +78,16 @@ const GetDateRowText = (
   ) : null;
 };
 
-const GetDayOfWeekRowText = (name, nextCollectionDate, isCurrentlyActive) => {
-  return name === "Bulk Pickup"
-    ? nextCollectionDate !== ""
-      ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
-          weekday: "long",
-        })
-      : "n/a"
-    : isCurrentlyActive
-    ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
-        weekday: "long",
-      })
-    : !isCurrentlyActive && nextCollectionDate != null
-    ? "Collected with trash until"
-    : "Collected with trash";
+const GetDayOfWeekRowText = (name, collectionDays) => {
+  let days = "";
+  for (let i = 0; i < collectionDays.length; ++i) {
+    days += collectionDays[i] + " ";
+  }
+
+  if (collectionDays.length === 0 && name === "Yard Materials") {
+    days = "Collected with trash";
+  }
+  return days;
 };
 
 const ScheduleTable = ({ collectionSchedules = [] }) => (
@@ -91,7 +96,7 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
       <TableRow>
         <TableHeadCell>Type</TableHeadCell>
         <TableHeadCell>Collection Frequency</TableHeadCell>
-        <TableHeadCell>Next Collection Day</TableHeadCell>
+        <TableHeadCell>Collection Day(s)</TableHeadCell>
       </TableRow>
     </TableHead>
     <TableBody>
@@ -118,22 +123,20 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
               ></i>
               {name}
             </TableCell>
-            <TableCell>{getNameSpecificValues(name).frequency}</TableCell>
             <TableCell>
-              {name.toLowerCase() === "bulk pickup" ||
-              name.toLowerCase() === "yard materials"
+              {getNameSpecificValues(name, yardSchedule).frequency}
+            </TableCell>
+            <TableCell>
+              {name.toLowerCase() === "bulk pickup"
                 ? GetDateRowText(
                     name,
+                    collectionDays,
                     nextCollectionDate,
                     isCurrentlyActive,
                     bulkCollectionDates,
                     yardSchedule
                   )
-                : GetDayOfWeekRowText(
-                    name,
-                    nextCollectionDate,
-                    isCurrentlyActive
-                  )}
+                : GetDayOfWeekRowText(name, collectionDays)}
             </TableCell>
           </TableRow>
         )
