@@ -57,10 +57,10 @@ const Schedule = () => {
     pdfLink,
     status: httpStatus,
   } = data;
-  console.log(collectionSchedules);
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
+  console.log(collectionSchedules);
   const displayMessage = () => {
     return (
       <Alert className="status" type="information" icon="far fa-info-circle">

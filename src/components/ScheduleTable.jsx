@@ -8,15 +8,34 @@ import {
 } from "@baltimorecounty/dotgov-components";
 
 import React from "react";
-import { scrollSmoothTo } from "../common/ScrollToAnchor";
+import { scrollToAnchor } from "../common/ScrollToAnchor";
 
 const scheduleLink = (yardSchedule) => {
-  return `See Yard <a href="#" onClick = ${handleOnClick(
-    "Schedule-" + { yardSchedule }
-  )}>Schedule ${yardSchedule}</a>`;
+  var buttonLink = (
+    <div>
+      See Yard{" "}
+      <button
+        className="dg_button-link"
+        style={{
+          fontFamily: "Montserrat,sans-serif",
+          fontSize: "16px",
+          fontStyle: "normal",
+        }}
+        aria-expanded="false"
+        type="button"
+        onClick={() => handleOnClick("Schedule-" + yardSchedule)}
+      >
+        Schedule{yardSchedule}
+      </button>
+    </div>
+  );
+  return buttonLink;
+  // return `See Yard <a href='#' onClick = ${handleOnClick(
+  //   "Schedule-" + { yardSchedule }
+  // )}>Schedule ${yardSchedule}</a>`;
 };
 
-const getNameSpecificValues = (name, yardSchedule = 0) => {
+const getNameSpecificValues = (name, yardSchedule = 0, collectionDays = []) => {
   switch (name.toLowerCase()) {
     case "trash":
       return { icon: "far fa-trash-alt", frequency: "Weekly" };
@@ -25,11 +44,8 @@ const getNameSpecificValues = (name, yardSchedule = 0) => {
     case "yard materials":
       return {
         icon: "far fa-leaf",
-        frequency: (
-          <div
-            dangerouslySetInnerHTML={{ __html: scheduleLink(yardSchedule) }}
-          ></div>
-        ),
+        frequency:
+          collectionDays.length === 0 ? "N/A" : scheduleLink(yardSchedule),
       };
     case "bulk pickup":
       return { icon: "far fa-dumpster", frequency: "Two Pickups Per Year" };
@@ -39,11 +55,11 @@ const getNameSpecificValues = (name, yardSchedule = 0) => {
 };
 
 const handleOnClick = (e) => {
-  scrollSmoothTo("holiday-schedule");
+  scrollToAnchor("holiday-schedule");
 };
 
-const GetBulkDates = (dates) => {
-  var newDates = dates.split(",");
+const GetBulkDates = (bulkCollectionDates) => {
+  var newDates = bulkCollectionDates.split(",");
   let newDateString = "";
 
   for (let i = 0; i < newDates.length; i++) {
@@ -59,29 +75,19 @@ const GetBulkDates = (dates) => {
       newDateString += newDate + ", ";
     }
   }
-
   return newDateString;
-};
-
-const GetDateRowText = (
-  name,
-  collectionDays,
-  nextCollectionDate,
-  isCurrentlyActive,
-  bulkCollectionDates,
-  yardSchedule
-) => {
-  return name === "Bulk Pickup" ? (
-    GetBulkDates(bulkCollectionDates)
-  ) : name === "Yard Materials" ? (
-    <div dangerouslySetInnerHTML={{ __html: scheduleLink }}></div>
-  ) : null;
 };
 
 const GetDayOfWeekRowText = (name, collectionDays) => {
   let days = "";
   for (let i = 0; i < collectionDays.length; ++i) {
-    days += collectionDays[i] + " ";
+    var newDay = collectionDays[i];
+
+    if (i === collectionDays.length - 1) {
+      days += newDay;
+    } else {
+      days += newDay + ", ";
+    }
   }
 
   if (collectionDays.length === 0 && name === "Yard Materials") {
@@ -102,14 +108,7 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
     <TableBody>
       {collectionSchedules.map(
         (
-          {
-            name,
-            collectionDays,
-            yardSchedule,
-            isCurrentlyActive = true,
-            nextCollectionDate,
-            bulkCollectionDates,
-          },
+          { name, collectionDays, yardSchedule, bulkCollectionDates },
           index
         ) => (
           <TableRow key={name}>
@@ -124,18 +123,14 @@ const ScheduleTable = ({ collectionSchedules = [] }) => (
               {name}
             </TableCell>
             <TableCell>
-              {getNameSpecificValues(name, yardSchedule).frequency}
+              {
+                getNameSpecificValues(name, yardSchedule, collectionDays)
+                  .frequency
+              }
             </TableCell>
             <TableCell>
               {name.toLowerCase() === "bulk pickup"
-                ? GetDateRowText(
-                    name,
-                    collectionDays,
-                    nextCollectionDate,
-                    isCurrentlyActive,
-                    bulkCollectionDates,
-                    yardSchedule
-                  )
+                ? GetBulkDates(bulkCollectionDates)
                 : GetDayOfWeekRowText(name, collectionDays)}
             </TableCell>
           </TableRow>

@@ -1,11 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { scrollSmoothTo } from "../common/ScrollToAnchor";
+import { scrollToAnchor } from "../common/ScrollToAnchor";
 
-const hrefVariable = "javascript";
 const handleOnClick = (e) => {
-  console.log(e);
-  scrollSmoothTo("holiday-schedule");
+  scrollToAnchor("holiday-schedule");
 };
 
 const WrongAddressMessage = (props) => (
@@ -16,9 +14,18 @@ const WrongAddressMessage = (props) => (
     <p>
       The information below reflects your normal assigned collection days. For
       holiday information, view the{" "}
-      <a href={`${hrefVariable}:;`} onClick={handleOnClick(this)}>
+      <button
+        className="dg_button-link"
+        style={{
+          fontSize: "22px",
+          fontStyle: "normal",
+        }}
+        aria-expanded="false"
+        type="button"
+        onClick={handleOnClick()}
+      >
         holiday collection schedule
-      </a>
+      </button>
       .
     </p>
   </div>

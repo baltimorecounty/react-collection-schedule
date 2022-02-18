@@ -1,4 +1,4 @@
-const scrollSmoothTo = (elementId) => {
+const scrollToAnchor = (elementId) => {
 
   var element = document.getElementById(elementId);
 
@@ -10,4 +10,4 @@ const scrollSmoothTo = (elementId) => {
   }
 };
 
-export { scrollSmoothTo };
+export { scrollToAnchor };
