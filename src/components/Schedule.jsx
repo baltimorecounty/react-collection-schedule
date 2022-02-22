@@ -11,6 +11,7 @@ import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import WrongAddressMessage from "./WrongAddressMessage";
 import { useQuery } from "react-query";
 
+
 const { getValue } = Config;
 
 // A custom hook that builds on useLocation to parse
@@ -60,7 +61,7 @@ const Schedule = () => {
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
-  console.log(collectionSchedules);
+
   const displayMessage = () => {
     return (
       <Alert className="status" type="information" icon="far fa-info-circle">
