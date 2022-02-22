@@ -8,6 +8,7 @@ const HolidayButton = (props) => {
       style={{
         fontSize: "22px",
         fontStyle: "normal",
+        cursor: "pointer",
       }}
       aria-expanded="false"
       type="button"

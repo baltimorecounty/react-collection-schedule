@@ -11,6 +11,7 @@ const ScheduleButton = (props) => {
           fontFamily: "Montserrat,sans-serif",
           fontSize: "16px",
           fontStyle: "normal",
+          cursor: "pointer",
         }}
         aria-expanded="false"
         type="button"

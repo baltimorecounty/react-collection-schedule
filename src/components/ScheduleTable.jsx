@@ -94,7 +94,7 @@ const ScheduleTable = (props) => {
         <TableRow>
           <TableHeadCell>Type</TableHeadCell>
           <TableHeadCell>Collection Frequency</TableHeadCell>
-          <TableHeadCell>Collection Day(s)</TableHeadCell>
+          <TableHeadCell>Regular Collection Day(s)</TableHeadCell>
         </TableRow>
       </TableHead>
       <TableBody>
