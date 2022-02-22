@@ -11,24 +11,29 @@ import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import WrongAddressMessage from "./WrongAddressMessage";
 import { useQuery } from "react-query";
 
+
 const { getValue } = Config;
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.
 function useQueryParams() {
   const params = new URLSearchParams(useLocation().search);
+
   return { error: parseInt(params.get("error")) };
 }
 
 const Schedule = () => {
   const { address } = useParams();
+
+  const zipcode = address.split(",")[1];
+
   const { error: errorFromQueryParams = 0 } = useQueryParams();
   const { data, status } = useQuery(
     address && [
       "getSchedule",
       {
         endpoint: getValue("collectionSchedule"),
-        path: `${address}`,
+        path: `${address.split(",")[0]},${zipcode}`,
       },
     ],
     Fetch,
@@ -53,10 +58,10 @@ const Schedule = () => {
     pdfLink,
     status: httpStatus,
   } = data;
-
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
+
   const displayMessage = () => {
     return (
       <Alert className="status" type="information" icon="far fa-info-circle">
@@ -68,7 +73,7 @@ const Schedule = () => {
     );
   };
 
-  const throughDate = () => new Date().getFullYear() + 1;
+  const currentYear = () => new Date().getFullYear();
 
   const isYardWasteActiveFlag = () => {
     const isActiveFlag =
@@ -84,7 +89,9 @@ const Schedule = () => {
       <div className="results">
         <h3>Your Current Schedule</h3>
         <p>You searched for:</p>
-        <p className="font-weight-bold">{FormatAddress(address)}</p>
+        <p className="font-weight-bold">
+          {FormatAddress(address.split(",")[0])}
+        </p>
         <WrongAddressMessage />
       </div>
       {!isActiveRoute ||
@@ -104,10 +111,10 @@ const Schedule = () => {
 
       {pdfLink && (
         <>
-          <h3>YOUR FOUR YEAR SCHEDULE</h3>
+          <h3>YOUR YEARLY SCHEDULE</h3>
           <p>
-            Find your complete trash, recycle and yard materials collections
-            schedule through {throughDate()}.
+            Find your complete trash, recycling and yard materials collections
+            schedule for {currentYear()}.
           </p>
           <p>
             <a

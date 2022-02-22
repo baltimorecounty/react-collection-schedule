@@ -8,92 +8,129 @@ import {
 } from "@baltimorecounty/dotgov-components";
 
 import React from "react";
+import ScheduleButton from "./ScheduleButton";
+import { scrollToAnchor } from "../common/ScrollToAnchor";
 
-const getIconClass = (name) => {
-  switch (name.toLowerCase()) {
-    case "trash":
-      return "far fa-trash-alt";
-    case "recycling":
-      return "far fa-recycle";
-    case "yard materials":
-      return "far fa-leaf";
-    case "bulk pickup":
-      return "far fa-dumpster";
-    default:
-      return "";
-  }
+const ScheduleTable = (props) => {
+  const { collectionSchedules } = props;
+
+  const getNameSpecificValues = (
+    name,
+    yardSchedule = 0,
+    collectionDays = []
+  ) => {
+    switch (name.toLowerCase()) {
+      case "trash":
+        return { icon: "far fa-trash-alt", frequency: "Weekly" };
+      case "recycling":
+        return { icon: "far fa-recycle", frequency: "Weekly" };
+      case "yard materials":
+        return {
+          icon: "far fa-leaf",
+          frequency:
+            collectionDays.length === 0 ? "N/A" : scheduleLink(yardSchedule),
+        };
+      case "bulk pickup":
+        return { icon: "far fa-dumpster", frequency: "Two Pickups Per Year" };
+      default:
+        return "";
+    }
+  };
+
+  const GetBulkDates = (bulkCollectionDates) => {
+    var newDates = bulkCollectionDates.split(",");
+    let newDateString = "";
+
+    for (let i = 0; i < newDates.length; i++) {
+      var year = newDates[i].substring(0, 4);
+      var month = newDates[i].substring(4, 6);
+      var day = newDates[i].substring(6, 8);
+
+      var newDate = new Date(year, month - 1, day).toLocaleDateString();
+
+      if (i === newDates.length - 1) {
+        newDateString += newDate;
+      } else {
+        newDateString += newDate + ", ";
+      }
+    }
+    return newDateString;
+  };
+
+  const GetDayOfWeekRowText = (name, collectionDays) => {
+    let days = "";
+    for (let i = 0; i < collectionDays.length; ++i) {
+      var newDay = collectionDays[i];
+
+      if (i === collectionDays.length - 1) {
+        days += newDay;
+      } else {
+        days += newDay + ", ";
+      }
+    }
+
+    if (collectionDays.length === 0 && name === "Yard Materials") {
+      days = "Collected with trash";
+    }
+    return days;
+  };
+
+  const scheduleLink = (yardSchedule) => {
+    const ScheduleScroll = () => {
+      scrollToAnchor(`Schedule-${yardSchedule}`);
+    };
+
+    return (
+      <ScheduleButton
+        yardSchedule={yardSchedule}
+        handleLinkClick={ScheduleScroll}
+      />
+    );
+  };
+
+  return (
+    <Table className="table-fixed">
+      <TableHead>
+        <TableRow>
+          <TableHeadCell>Type</TableHeadCell>
+          <TableHeadCell>Collection Frequency</TableHeadCell>
+          <TableHeadCell>Regular Collection Day(s)</TableHeadCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {collectionSchedules.map(
+          (
+            { name, collectionDays, yardSchedule, bulkCollectionDates },
+            index
+          ) => (
+            <TableRow key={name}>
+              <TableCell style={{ verticalAlign: "middle" }}>
+                <i
+                  className={`fa-fw d-sm-none d-none d-md-inline ${
+                    getNameSpecificValues(name).icon
+                  } fa-2x`}
+                  style={{ marginRight: "15px" }}
+                  aria-hidden="true"
+                ></i>
+                {name}
+              </TableCell>
+              <TableCell>
+                {
+                  getNameSpecificValues(name, yardSchedule, collectionDays)
+                    .frequency
+                }
+              </TableCell>
+              <TableCell>
+                {name.toLowerCase() === "bulk pickup"
+                  ? GetBulkDates(bulkCollectionDates)
+                  : GetDayOfWeekRowText(name, collectionDays)}
+              </TableCell>
+            </TableRow>
+          )
+        )}
+      </TableBody>
+    </Table>
+  );
 };
-
-const GetDateRowText = (name, nextCollectionDate, isCurrentlyActive) => {
-  return name === "Bulk Pickup" && nextCollectionDate === ""
-    ? "There are no more bulk pickups for this year"
-    : isCurrentlyActive
-    ? new Date(nextCollectionDate).toLocaleDateString()
-    : !isCurrentlyActive && nextCollectionDate != null
-    ? new Date(nextCollectionDate).toLocaleDateString()
-    : name === "bulk pickup" && nextCollectionDate === ""
-    ? "There are no more bulk pickups for this year"
-    : "n / a";
-};
-
-const GetDayOfWeekRowText = (name, nextCollectionDate, isCurrentlyActive) => {
-  return name === "Bulk Pickup"
-    ? nextCollectionDate !== ""
-      ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
-          weekday: "long",
-        })
-      : "n/a"
-    : isCurrentlyActive
-    ? new Date(nextCollectionDate).toLocaleDateString("en-us", {
-        weekday: "long",
-      })
-    : !isCurrentlyActive && nextCollectionDate != null
-    ? "Collected with trash until"
-    : "Collected with trash";
-};
-
-const ScheduleTable = ({ collectionSchedules = [] }) => (
-  <Table className="table-fixed">
-    <TableHead>
-      <TableRow>
-        <TableHeadCell>Type</TableHeadCell>
-        <TableHeadCell>Collection Occurs</TableHeadCell>
-        <TableHeadCell>Next Collection</TableHeadCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {collectionSchedules.map(
-        (
-          {
-            name,
-            collectionDays,
-            isCurrentlyActive = true,
-            nextCollectionDate,
-          },
-          index
-        ) => (
-          <TableRow key={name}>
-            <TableCell style={{ verticalAlign: "middle" }}>
-              <i
-                className={`fa-fw d-sm-none d-none d-md-inline ${getIconClass(
-                  name
-                )} fa-2x`}
-                style={{ marginRight: "15px" }}
-                aria-hidden="true"
-              ></i>
-              {name}
-            </TableCell>
-            <TableCell>
-              {GetDayOfWeekRowText(name, nextCollectionDate, isCurrentlyActive)}
-            </TableCell>
-            <TableCell>
-              {GetDateRowText(name, nextCollectionDate, isCurrentlyActive)}
-            </TableCell>
-          </TableRow>
-        )
-      )}
-    </TableBody>
-  </Table>
-);
 
 export default ScheduleTable;
