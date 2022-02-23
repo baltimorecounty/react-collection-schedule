@@ -38,23 +38,26 @@ const ScheduleTable = (props) => {
   };
 
   const GetBulkDates = (bulkCollectionDates) => {
-    var newDates = bulkCollectionDates.split(",");
-    let newDateString = "";
+    if (bulkCollectionDates) {
+      var newDates = bulkCollectionDates.split(",");
+      let newDateString = "";
 
-    for (let i = 0; i < newDates.length; i++) {
-      var year = newDates[i].substring(0, 4);
-      var month = newDates[i].substring(4, 6);
-      var day = newDates[i].substring(6, 8);
+      for (let i = 0; i < newDates.length; i++) {
+        var year = newDates[i].substring(0, 4);
+        var month = newDates[i].substring(4, 6);
+        var day = newDates[i].substring(6, 8);
 
-      var newDate = new Date(year, month - 1, day).toLocaleDateString();
+        var newDate = new Date(year, month - 1, day).toLocaleDateString();
 
-      if (i === newDates.length - 1) {
-        newDateString += newDate;
-      } else {
-        newDateString += newDate + ", ";
+        if (i === newDates.length - 1) {
+          newDateString += newDate;
+        } else {
+          newDateString += newDate + ", ";
+        }
       }
+      return newDateString;
     }
-    return newDateString;
+    return null;
   };
 
   const GetDayOfWeekRowText = (name, collectionDays) => {

@@ -8,7 +8,6 @@ const ScheduleButton = (props) => {
       <button
         className="dg_button-link"
         style={{
-          fontFamily: "Montserrat,sans-serif",
           fontSize: "16px",
           fontStyle: "normal",
           cursor: "pointer",
@@ -17,7 +16,7 @@ const ScheduleButton = (props) => {
         type="button"
         onClick={handleLinkClick}
       >
-        Schedule{yardSchedule}
+        Schedule {yardSchedule}
       </button>
     </div>
   );
