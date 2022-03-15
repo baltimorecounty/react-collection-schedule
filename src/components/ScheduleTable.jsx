@@ -57,7 +57,7 @@ const ScheduleTable = (props) => {
       }
       return newDateString;
     }
-    return null;
+    return "N/A";
   };
 
   const GetDayOfWeekRowText = (name, collectionDays) => {

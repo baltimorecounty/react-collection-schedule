@@ -18,7 +18,8 @@ const { getValue } = Config;
 function useQueryParams() {
   const params = new URLSearchParams(useLocation().search);
 
-  return { error: parseInt(params.get("error")) };
+  //return { error: parseInt(params.get("error")) };
+  return { error: 0 };
 }
 
 const Schedule = () => {
@@ -74,6 +75,12 @@ const Schedule = () => {
     );
   };
 
+  const isResidential = isApartmentInDwelling
+    ? true
+    : isSingleFamilyHome
+    ? true
+    : false;
+
   const currentYear = () => new Date().getFullYear();
 
   const isYardWasteActiveFlag = () => {
@@ -100,7 +107,7 @@ const Schedule = () => {
       errorFromQueryParams === 404 ||
       !hasAtLeastOneSchedule ? (
         <AddressNotFoundAlert />
-      ) : !isSingleFamilyHome || !isApartmentInDwelling ? (
+      ) : !isResidential ? (
         <CommercialAlert />
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
