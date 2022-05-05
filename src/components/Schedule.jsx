@@ -18,8 +18,8 @@ const { getValue } = Config;
 function useQueryParams() {
   const params = new URLSearchParams(useLocation().search);
 
-  //return { error: parseInt(params.get("error")) };
-  return { error: 0 };
+  return { error: parseInt(params.get("error")) };
+  //return { error: 0 };
 }
 
 const Schedule = () => {
