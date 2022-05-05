@@ -61,6 +61,8 @@ const Schedule = () => {
     status: httpStatus,
   } = data;
 
+  const showSchedule = isActiveRoute ? true : isProposedRoute ? true : false;
+
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
@@ -103,8 +105,7 @@ const Schedule = () => {
         </p>
         <WrongAddressMessage />
       </div>
-      {!isActiveRoute ||
-      !isProposedRoute ||
+      {!showSchedule ||
       httpStatus === 404 ||
       errorFromQueryParams === 404 ||
       !hasAtLeastOneSchedule ? (
