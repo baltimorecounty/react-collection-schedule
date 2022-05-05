@@ -56,6 +56,7 @@ const Schedule = () => {
     isSingleFamilyHome,
     isApartmentInDwelling,
     isActiveRoute,
+    isProposedRoute,
     pdfLink,
     status: httpStatus,
   } = data;
@@ -103,6 +104,7 @@ const Schedule = () => {
         <WrongAddressMessage />
       </div>
       {!isActiveRoute ||
+      !isProposedRoute ||
       httpStatus === 404 ||
       errorFromQueryParams === 404 ||
       !hasAtLeastOneSchedule ? (
