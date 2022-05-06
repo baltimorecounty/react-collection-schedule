@@ -34,7 +34,7 @@ const FindScheduleForm = () => {
       refetchOnWindowFocus: false,
     }
   );
-  
+
   const { candidates = [] } = addressCandidates || {};
   const hasAddressCandidates = candidates.length > 0;
 
@@ -101,10 +101,13 @@ const FindScheduleForm = () => {
   if (hasAddressCandidates) {
     /** We are using placename here, because the api that return only accepts a partial address. */
 
-    const address = candidates[0].attributes.placeName;
+    let address = candidates[0].attributes.placeName;
     const zipcode = candidates[0].attributes.match_Addr.split(",")[3].trim();
-
-    return <Redirect to={`/schedule/${address}, ${zipcode}`} />;
+    address = address.replace("/", "@");
+    console.log(encodeURIComponent(address));
+    return (
+      <Redirect to={`/schedule/${encodeURIComponent(address)}, ${zipcode}`} />
+    );
   }
 
   return (

@@ -44,7 +44,16 @@ const Schedule = () => {
   );
 
   if (!data) {
-    return <p>Loading collection schedule for {FormatAddress(address)}...</p>;
+    return (
+      <p>
+        Loading collection schedule for{" "}
+        {FormatAddress(decodeURIComponent(address.split(",")[0])).replace(
+          "@",
+          "/"
+        )}
+        ...
+      </p>
+    );
   }
 
   if (status === "error" || errorFromQueryParams === 500) {
@@ -101,7 +110,10 @@ const Schedule = () => {
         <h3>Your Current Schedule</h3>
         <p>You searched for:</p>
         <p className="font-weight-bold">
-          {FormatAddress(address.split(",")[0])}
+          {FormatAddress(decodeURIComponent(address.split(",")[0])).replace(
+            "@",
+            "/"
+          )}
         </p>
         <WrongAddressMessage />
       </div>
