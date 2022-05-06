@@ -11,7 +11,6 @@ import SomethingWentWrongAlert from "./SomethingWentWrongAlert";
 import WrongAddressMessage from "./WrongAddressMessage";
 import { useQuery } from "react-query";
 
-
 const { getValue } = Config;
 
 // A custom hook that builds on useLocation to parse
@@ -20,6 +19,7 @@ function useQueryParams() {
   const params = new URLSearchParams(useLocation().search);
 
   return { error: parseInt(params.get("error")) };
+  //return { error: 0 };
 }
 
 const Schedule = () => {
@@ -54,10 +54,15 @@ const Schedule = () => {
   const {
     collectionSchedules = [],
     isSingleFamilyHome,
+    isApartmentInDwelling,
     isActiveRoute,
+    isProposedRoute,
     pdfLink,
     status: httpStatus,
   } = data;
+
+  const showSchedule = isActiveRoute ? true : isProposedRoute ? true : false;
+
   const hasAtLeastOneSchedule = collectionSchedules.some(
     (schedule) => schedule.nextCollectionDate
   );
@@ -72,6 +77,12 @@ const Schedule = () => {
       </Alert>
     );
   };
+
+  const isResidential = isApartmentInDwelling
+    ? true
+    : isSingleFamilyHome
+    ? true
+    : false;
 
   const currentYear = () => new Date().getFullYear();
 
@@ -94,12 +105,12 @@ const Schedule = () => {
         </p>
         <WrongAddressMessage />
       </div>
-      {!isActiveRoute ||
+      {!showSchedule ||
       httpStatus === 404 ||
       errorFromQueryParams === 404 ||
       !hasAtLeastOneSchedule ? (
         <AddressNotFoundAlert />
-      ) : !isSingleFamilyHome ? (
+      ) : !isResidential ? (
         <CommercialAlert />
       ) : (
         <ScheduleTable collectionSchedules={collectionSchedules} />
